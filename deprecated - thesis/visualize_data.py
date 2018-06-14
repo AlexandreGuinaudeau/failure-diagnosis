@@ -12,10 +12,10 @@ def smooth(x, window_len=50):
     y = np.convolve(w / w.sum(), s, mode='valid')
     return y
 
-data_dir = os.path.join(os.getcwd(), "data", "raw")
+data_dir = os.path.join(os.getcwd(), "stats")
 
 # path1 = os.path.join(data_dir, "heartbeat1")
-path2 = os.path.join(data_dir, "heartbeat1")
+path2 = os.path.join(data_dir, "battery_statsbattery_temp_c.csv")
 
 df_all = pd.read_csv(path2, header=None)
 
