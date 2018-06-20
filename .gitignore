@@ -97,7 +97,7 @@ MANIFEST
 data/
 img/
 stats/
-*.png
 *.csv
 
-# images
+# keep tex files
+!Master Thesis/
