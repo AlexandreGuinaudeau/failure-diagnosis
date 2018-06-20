@@ -1,0 +1,40 @@
+\contentsline {section}{\nameref {sec:intro}}{3}{section*.2}
+\contentsline {paragraph}{Interest and assignment}{3}{section*.3}
+\contentsline {section}{\numberline {1}Pilot study}{5}{section.1}
+\contentsline {subsection}{\numberline {1.1}News value}{5}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Correlation metrics}{5}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Association metrics}{5}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Application to heterogeneous data}{6}{subsection.1.4}
+\contentsline {section}{\numberline {2}Defining association for heterogeneous time series}{7}{section.2}
+\contentsline {subsection}{\numberline {2.1}Fundamental properties}{7}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Notations and definitions}{7}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Properties}{7}{subsubsection.2.1.2}
+\contentsline {subsection}{\numberline {2.2}Expected behavior for simple examples}{8}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Categorical and event data}{8}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Numerical and event data}{8}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}Comparison of different metrics}{9}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Pearson Correlation Coefficient}{10}{subsubsection.2.3.1}
+\contentsline {paragraph}{Properties}{10}{section*.4}
+\contentsline {paragraph}{Categorical data}{10}{section*.5}
+\contentsline {paragraph}{Numerical data}{10}{section*.6}
+\contentsline {subsubsection}{\numberline {2.3.2}Spearman and Kendall Correlation Coefficients}{10}{subsubsection.2.3.2}
+\contentsline {paragraph}{Properties}{11}{section*.7}
+\contentsline {paragraph}{Categorical data}{11}{section*.8}
+\contentsline {paragraph}{Numerical data}{11}{section*.9}
+\contentsline {subsubsection}{\numberline {2.3.3}Null hypothesis}{11}{subsubsection.2.3.3}
+\contentsline {paragraph}{Properties}{11}{section*.10}
+\contentsline {paragraph}{Categorical data}{11}{section*.11}
+\contentsline {paragraph}{Numerical data}{11}{section*.12}
+\contentsline {paragraph}{Mutual Information}{12}{section*.13}
+\contentsline {paragraph}{Properties}{12}{section*.14}
+\contentsline {paragraph}{Categorical data}{12}{section*.15}
+\contentsline {paragraph}{Numerical data}{12}{section*.16}
+\contentsline {subsubsection}{\numberline {2.3.4}Conclusion}{13}{subsubsection.2.3.4}
+\contentsline {paragraph}{Theory}{13}{section*.18}
+\contentsline {paragraph}{Practice}{13}{section*.19}
+\contentsline {section}{\numberline {3}Application to real data}{13}{section.3}
+\contentsline {subsection}{\numberline {3.1}Preprocessing}{13}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Data}{14}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Results}{14}{subsection.3.3}
+\contentsline {section}{\nameref {sec:appendix}}{15}{section*.22}
+\contentsline {section}{\numberline {A}Mutual information generalization}{15}{section.1}

@@ -1,0 +1,485 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{baigneres2004}{article}{}
+    \name{author}{3}{}{%
+      {{hash=BT}{%
+         family={Baignères},
+         familyi={B\bibinitperiod},
+         given={Thomas},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=JP}{%
+         family={Junod},
+         familyi={J\bibinitperiod},
+         given={Pascal},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=VS}{%
+         family={Vaudenay},
+         familyi={V\bibinitperiod},
+         given={Serge},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BTJPVS1}
+    \strng{fullhash}{BTJPVS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{432\bibrangedash 450}
+    \field{series}{Lecture Notes in Computer Science}
+    \field{title}{How Far Can We Go Beyond Linear Cryptanalysis?}
+    \field{volume}{3329}
+    \field{journaltitle}{Advances in Cryptology - ASIACRYPT 2004, 10th
+  International Conference on the Theory and Application of Cryptology and
+  Information Security}
+    \field{year}{2004}
+  \endentry
+
+  \entry{lomax1954}{article}{}
+    \name{author}{1}{}{%
+      {{hash=LKS}{%
+         family={Lomax},
+         familyi={L\bibinitperiod},
+         given={K.\bibnamedelima S.},
+         giveni={K\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor \& Francis}%
+    }
+    \strng{namehash}{LKS1}
+    \strng{fullhash}{LKS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1080/01621459.1954.10501239
+    \endverb
+    \field{number}{268}
+    \field{pages}{847\bibrangedash 852}
+    \field{title}{Business Failures: Another Example of the Analysis of Failure
+  Data}
+    \field{volume}{49}
+    \field{journaltitle}{Journal of the American Statistical Association}
+    \field{year}{1954}
+  \endentry
+
+  \entry{proschan1963}{article}{}
+    \name{author}{1}{}{%
+      {{hash=PF}{%
+         family={Proschan},
+         familyi={P\bibinitperiod},
+         given={Frank},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor & Francis}%
+    }
+    \strng{namehash}{PF1}
+    \strng{fullhash}{PF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1080/00401706.1963.10490105
+    \endverb
+    \field{number}{3}
+    \field{pages}{375\bibrangedash 383}
+    \field{title}{Theoretical Explanation of Observed Decreasing Failure Rate}
+    \field{volume}{5}
+    \field{journaltitle}{Technometrics}
+    \field{year}{1963}
+  \endentry
+
+  \entry{saunders1983}{article}{}
+    \name{author}{2}{}{%
+      {{hash=SSC}{%
+         family={Saunders},
+         familyi={S\bibinitperiod},
+         given={Sam\bibnamedelima C.},
+         giveni={S\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=MJM}{%
+         family={Myhre},
+         familyi={M\bibinitperiod},
+         given={Janet\bibnamedelima M.},
+         giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor & Francis}%
+    }
+    \strng{namehash}{SSCMJM1}
+    \strng{fullhash}{SSCMJM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1080/01621459.1983.10478027
+    \endverb
+    \field{number}{383}
+    \field{pages}{664\bibrangedash 673}
+    \field{title}{Maximum Likelihood Estimation for Two-Parameter Decreasing
+  Hazard Rate Distributions Using Censored Data}
+    \field{volume}{78}
+    \field{journaltitle}{Journal of the American Statistical Association}
+    \field{year}{1983}
+  \endentry
+
+  \entry{weibull1951}{article}{}
+    \name{author}{1}{}{%
+      {{hash=WW}{%
+         family={Weibull},
+         familyi={W\bibinitperiod},
+         given={W.},
+         giveni={W\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WW1}
+    \strng{fullhash}{WW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{293\bibrangedash 297}
+    \field{title}{A statistical distribution function of wide applicability}
+    \field{volume}{18}
+    \field{journaltitle}{Journal of Applied Mechanics}
+    \field{year}{1951}
+  \endentry
+
+  \entry{anderson2005}{book}{}
+    \name{author}{1}{}{%
+      {{hash=ATL}{%
+         family={Anderson},
+         familyi={A\bibinitperiod},
+         given={T.\bibnamedelima L.},
+         giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor \& Francis Ed.}%
+    }
+    \strng{namehash}{ATL1}
+    \strng{fullhash}{ATL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{Fracture Mechanics: Fundamentals and Applications, 3rd
+  Edition}
+    \field{year}{2005}
+  \endentry
+
+  \entry{wasserman2004}{book}{}
+    \name{author}{1}{}{%
+      {{hash=WL}{%
+         family={Wasserman},
+         familyi={W\bibinitperiod},
+         given={Larry},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer-Verlag}%
+    }
+    \strng{namehash}{WL1}
+    \strng{fullhash}{WL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{179\bibrangedash 203}
+    \field{title}{All of Statistics : A Concise Course in Statistical
+  Inference}
+    \field{year}{2004}
+  \endentry
+
+  \entry{esteller2001}{article}{}
+    \name{author}{4}{}{%
+      {{hash=ER}{%
+         family={Esteller},
+         familyi={E\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=VG}{%
+         family={Vachtsevanos},
+         familyi={V\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=EJ}{%
+         family={Echauz},
+         familyi={E\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LB}{%
+         family={Litt},
+         familyi={L\bibinitperiod},
+         given={B.},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \keyw{electrocardiography;electroencephalography;fractals;medical signal
+  processing;time series;time-domain analysis;transient analysis;biomedical
+  signals;electrocardiograms;electroencephalograms;epileptic seizures;geometric
+  object;intracranial electroencephalogram data;physiologic
+  function;signal-to-noise ratio;time domain;time series;transient
+  detection;waveform fractal dimension algorithms;window size;Algorithm design
+  and analysis;Biomedical computing;Biomedical engineering;Delay
+  estimation;Electroencephalography;Epilepsy;Fractals;Signal analysis;Signal
+  processing algorithms;Time domain analysis}
+    \strng{namehash}{ERVGEJ+1}
+    \strng{fullhash}{ERVGEJLB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/81.904882
+    \endverb
+    \field{issn}{1057-7122}
+    \field{number}{2}
+    \field{pages}{177\bibrangedash 183}
+    \field{title}{A comparison of waveform fractal dimension algorithms}
+    \field{volume}{48}
+    \field{journaltitle}{IEEE Transactions on Circuits and Systems I:
+  Fundamental Theory and Applications}
+    \field{year}{2001}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{harchaoui2010}{article}{}
+    \name{author}{2}{}{%
+      {{hash=HZ}{%
+         family={Harchaoui},
+         familyi={H\bibinitperiod},
+         given={Z.},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=LLC}{%
+         family={Lévy-Leduc},
+         familyi={L\bibinitperiod-L\bibinitperiod},
+         given={C.},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor & Francis}%
+    }
+    \strng{namehash}{HZLLC1}
+    \strng{fullhash}{HZLLC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1198/jasa.2010.tm09181
+    \endverb
+    \field{number}{492}
+    \field{pages}{1480\bibrangedash 1493}
+    \field{title}{Multiple Change-Point Estimation With a Total Variation
+  Penalty}
+    \field{volume}{105}
+    \field{journaltitle}{Journal of the American Statistical Association}
+    \field{year}{2010}
+  \endentry
+
+  \entry{jackson2005}{article}{}
+    \name{author}{10}{}{%
+      {{hash=JB}{%
+         family={{Jackson}},
+         familyi={J\bibinitperiod},
+         given={B.},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SJD}{%
+         family={{Scargle}},
+         familyi={S\bibinitperiod},
+         given={J.\bibnamedelima D.},
+         giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=BD}{%
+         family={{Barnes}},
+         familyi={B\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=AS}{%
+         family={{Arabhi}},
+         familyi={A\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={{Alt}},
+         familyi={A\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=GP}{%
+         family={{Gioumousis}},
+         familyi={G\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=GE}{%
+         family={{Gwin}},
+         familyi={G\bibinitperiod},
+         given={E.},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=SP}{%
+         family={{San}},
+         familyi={S\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=TL}{%
+         family={{Tan}},
+         familyi={T\bibinitperiod},
+         given={L.},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=TTT}{%
+         family={{Tsai}},
+         familyi={T\bibinitperiod},
+         given={T.\bibnamedelima T.},
+         giveni={T\bibinitperiod\bibinitdelim T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{JBSJDBD+1}
+    \strng{fullhash}{JBSJDBDASAAGPGESPTLTTT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1109/LSP.2001.838216
+    \endverb
+    \verb{eprint}
+    \verb math/0309285
+    \endverb
+    \field{pages}{105\bibrangedash 108}
+    \field{title}{{An algorithm for optimal partitioning of data on an
+  interval}}
+    \field{volume}{12}
+    \field{journaltitle}{IEEE Signal Processing Letters}
+    \field{month}{02}
+    \field{year}{2005}
+  \endentry
+
+  \entry{killick2012}{article}{}
+    \name{author}{3}{}{%
+      {{hash=KR}{%
+         family={Killick},
+         familyi={K\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=FP}{%
+         family={Fearnhead},
+         familyi={F\bibinitperiod},
+         given={P.},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=EIA}{%
+         family={Eckley},
+         familyi={E\bibinitperiod},
+         given={I.\bibnamedelima A.},
+         giveni={I\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Taylor & Francis}%
+    }
+    \strng{namehash}{KRFPEIA1}
+    \strng{fullhash}{KRFPEIA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1080/01621459.2012.737745
+    \endverb
+    \field{number}{500}
+    \field{pages}{1590\bibrangedash 1598}
+    \field{title}{Optimal Detection of Changepoints With a Linear Computational
+  Cost}
+    \field{volume}{107}
+    \field{journaltitle}{Journal of the American Statistical Association}
+    \field{year}{2012}
+  \endentry
+
+  \entry{baum1966}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BLE}{%
+         family={Baum},
+         familyi={B\bibinitperiod},
+         given={Leonard\bibnamedelima E.},
+         giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=PT}{%
+         family={Petrie},
+         familyi={P\bibinitperiod},
+         given={Ted},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {The Institute of Mathematical Statistics}%
+    }
+    \strng{namehash}{BLEPT1}
+    \strng{fullhash}{BLEPT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1214/aoms/1177699147
+    \endverb
+    \field{number}{6}
+    \field{pages}{1554\bibrangedash 1563}
+    \field{title}{Statistical Inference for Probabilistic Functions of Finite
+  State Markov Chains}
+    \field{volume}{37}
+    \field{journaltitle}{Ann. Math. Statist.}
+    \field{month}{12}
+    \field{year}{1966}
+  \endentry
+
+  \entry{chis2015}{article}{}
+    \name{author}{2}{}{%
+      {{hash=CT}{%
+         family={Chis},
+         familyi={C\bibinitperiod},
+         given={Tiberiu},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=HPG}{%
+         family={Harrison},
+         familyi={H\bibinitperiod},
+         given={Peter\bibnamedelima G.},
+         giveni={P\bibinitperiod\bibinitdelim G\bibinitperiod},
+      }}%
+    }
+    \keyw{HMM, online learning, adapted Baum-Welch, autocorrelation, MMPP}
+    \strng{namehash}{CTHPG1}
+    \strng{fullhash}{CTHPG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb https://doi.org/10.1016/j.entcs.2015.10.022
+    \endverb
+    \field{issn}{1571-0661}
+    \field{note}{Twenty-ninth and thirtieth Annual UK Performance Engineering
+  Workshops (UKPEW)}
+    \field{pages}{109 \bibrangedash  127}
+    \field{title}{Adapting Hidden Markov Models for Online Learning}
+    \field{volume}{318}
+    \field{journaltitle}{Electronic Notes in Theoretical Computer Science}
+    \field{year}{2015}
+  \endentry
+\enddatalist
+\endinput

@@ -1,0 +1,213 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{textcomp}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[ruled,vlined]{algorithm2e}
+\newtheorem{thm}{Theorem}
+\definecolor{gris25}{gray}{0.80}
+\newcommand{\encadre}[1]{\fcolorbox{black}{gris25}{\begin{minipage}{1.0\textwidth}\medskip #1 \vspace{0.1pt}\end{minipage}}}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{cor}[thm]{Corollaire}
+\def\N{{\mathbb{N}}}
+\def\R{{\mathcal{R}}}
+\def\RO{{\mathcal{R}_{opt}}}
+\def\RA{{\mathcal{R}_{alg}}}
+
+\title{\textsc{Degree Project - Pre-study} \\ Correlating event time-series with underlying sensor measures}
+\author{Alexandre GUINAUDEAU \href{mailto:alegui@kth.se}{alegui@kth.se}\\
+Supervisor: Pawel Herman\\
+Examiner: Hedvig Kjellstr{\"o}m}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\subsection*{When can a continuous or categorical time series be considered as correlated to a binary event time series?}
+
+\section*{Introduction}
+
+The goal of my master thesis is to find a way to facilitate the diagnosis of incidents. This could apply to many different sectors, ranging from manufactures to intensive care units via data centers.
+The main property is that these systems have sensors that measure environment parameters on the one hand, and detect unexpected events on the other hand. When a failure is detected, it is often hard to find the sensors that provide some information that would be useful to diagnose the event.
+
+The data I have access to during my master thesis is composed of thousands of heterogeneous sensors time-series, and hundreds of events time-series.
+
+Most of the time series literature focuses on event detection or prediction of future values.
+It is also very hard to find open data that has similar properties to mine, because sensor is usually very sensitive.
+However, finding the sensors data correlated to the events time-series is critical to diagnose these incidents.
+Because of the sensitivity of the data I have access to, I cannot use it directly in my report, instead I will generate data that has similar properties.\\
+
+I started by studying general literature about time series, then focused on sensor time series and finally on articles mentioning problems that were similar to mine.
+
+\section*{Literature}
+
+\subsection*{Time-series overview}
+
+As mentioned in the specifications, I started by looking for general time-series knowledge:
+\begin{itemize}
+    \item Time-series
+    \begin{itemize}
+        \item How can time series correlation be measured and what pitfalls should be avoided?
+        \item How can time series be re-sampled without losing information?
+        \item What algorithms perform well on categorical, binary and numerical time series?
+    \end{itemize}
+    \item Event detection
+    \begin{itemize}
+        \item When can binary data be re-sampled into a probability time-series?
+        \item How can I detect anomalies in the sensor data?
+    \end{itemize}
+\end{itemize}
+
+I found several articles that helped me answer my pre-study questions. One must me cautious when looking for correlations between time series, because usual measures such as Pearson correlation tend to give high scores to time series with similar trends. Good practices are therefore to de-trend and de-seasonalize time-series. Time-series analysis usually involve moving averages (to cancel local white noise), auto-correlation (to find natural frequencies), and/or auto-regression (when the process is stochastic). Time-series can also be re-sampled to facilitate their comparison: up-sampled to a higher frequency by guessing missing values or down-sampled to a lower frequency by aggregating values over a specific time frame. \\
+
+In other words, time series can be decomposed into:
+\begin{itemize}
+    \item \textit{A trend}. This is usually removed before any further analysis.
+    \item \textit{One or several seasonal components}. These can be found using auto-correlation with different lags.
+    \item \textit{A dependency on previous values in a short time-frame}. Time series are usually assumed to be continuous almost everywhere.
+    \item \textit{White noise}. Time series can be more or less predictable, but their is always some uncertainty.
+\end{itemize}
+By decomposing a time series in a similar way, it is possible to predict future values (with some confidence) and to detect outliers.\\
+
+
+\subsection*{Sensor data}
+I tried to find different articles which used sensor data, to find ideas on how to process such data. I found studies on Climate \cite{climate}, Intensive Care Units \cite{icu} and computer resources \cite{incident-diagnosis}. It is interesting to note that, except the latter, the time series have natural frequencies which enable multiscale analyzes. Climate data, for instance, can be analyzed on a yearly scale to find global trends, on a daily scale to find seasonal trends, or on a geographical scale to find regional trends. My data has a similar property: there are cycles, so it is possible to analyze in parallel inter-cycle trends and anomalies within cycles.\\
+
+I therefore looked for literature on multi-scale analysis. I found very interesting ideas to find good decomposition into scales \cite{multiscale-timeseries}, measure anomalies across all scales \cite{multilevel-surprise}, and detect local \cite{anomaly-1, anomaly-2, anomaly-3} or global anomalies \cite{lof, global-local-outliers}.
+I can use these ideas to find series that have anomalies when an event is detected.
+In other words, these techniques can be used to map continuous sensor time-series to binary anomaly time-series that are more practical to correlate with the events time series. Categorical time series can be mapped to their change points \cite{categorical-time-series, detect-change-points} time series. Once all the timeseries are mapped to homogeneous (binary) timeseries, they can be correlated to event timeseries, for instance using parameter-free clustering \cite{parameter-free-clustering}.\\
+
+Based on all this literature, the method I plan to use is the following:
+\begin{itemize}
+    \item Extract cycles where the data has a similar behavior
+    \item Map the sensor time series to binary time-series of anomaly events
+    \item Correlate these anomaly time series with the events time series, either locally (specific time within a cycle) or globally (when anomalies and events occur during the same cycles)
+\end{itemize}
+
+This methodology is coherent with the data I have access to: events can either be triggered "locally" because a sudden failure, or "globally" by a change of the outer environment.
+
+As mentioned in the introduction, the data I have access to is very sensitive. I will therefore generate data that has similar properties using similar ideas to Microsoft's incident diagnosis \cite{incident-diagnosis}. I will monitor statistics on my computer such as CPU and memory usage, and detect events when the computer lags, for instance when a query times out.
+
+\clearpage
+
+\begin{thebibliography}{9}
+% Climate
+\bibitem{climate}
+Claude Frankignoul, Klaus Hasselmann (1977) \\
+\textit{Stochastic climate models, Part II - Application to sea-surface temperature anomalies and thermocline variability},
+Tellus, 29:4, 289-305\\
+\url{https://doi.org/10.3402/tellusa.v29i4.11362}
+
+% Categorical Time series
+\bibitem{categorical-time-series}
+David S. Stoffer, David E. Tyler, Andrew J. McDougall (1993)\\
+\textit{Spectral Analysis for Categorical Time Series: Scaling and the Spectral Envelope},
+Biometrika Vol. 80, No. 3, pp. 611-622\\
+\url{https://www.researchgate.net/profile/David_Tyler2/publication/239726763_Spectral_Analysis_for_Categorical_Time_Series_Scaling_and_the_Spectral_Envelope/links/0046352d842c990d8d000000.pdf}
+
+% distance-based outliers
+\bibitem{anomaly-1}
+E. M. Knorr and R. T. Ng. (1998)\\
+\textit{Algorithms for Mining Distance-Based Outliers}, In Proceedings of the 24th
+International Conference on Very Large Databases (VLDB), pages 392-403, 1998.\\
+\url{http://www.vldb.org/conf/1998/p392.pdf}
+
+% Iterative partitioning of time segments to detect change points
+\bibitem{detect-change-points}
+Valery Guralnik, Jaideep Srivastava (1999)\\
+\textit{Event Detection from Time Series Data}, In Proceedings of the Fifth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD'99), pp. 33-42, August 15-18, 1999, San Diego, CA, USA. \\
+\url{http://dmr.cs.umn.edu/Papers/P1999_6.pdf}
+
+% Different kinds of sensors:
+% Intensive Care Unit => alerts based on hardcoded thresholds
+\bibitem{icu}
+M.-C. Chambrin, P. Ravaux, D. Calvelo-Aros, A. Jaborska, C. Chopin, B. Boniface (1999)\\
+\textit{Multicentric study of monitoring alarms in the adult intensive care unit (ICU): a descriptive analysis},
+Intensive Care Medicine, Volume 25, Issue 12, pp 1360-1366\\
+\url{https://doi.org/10.1007/s001340051082}
+
+\bibitem{anomaly-2}
+S. Ramaswamy, R. Rastogi, and K. Shim. (2000)\\
+\textit{Efficient algorithms for mining outliers from large data sets}, In
+SIGMOD '00: Proceedings of the 2000 ACM SIGMOD international conference on Management of
+data, pages 427-438, 2000.
+\url{https://dl.acm.org/citation.cfm?id=335437&dl=ACM&coll=DL&CFID=841695128&CFTOKEN=52089307}
+
+\bibitem{lof}
+M. M. Breunig, H. Kriegel, R. T. Ng, and J. Sander (2000)\\
+\textit{LOF: Identifying density-based local outlier}
+In Proceedings of the ACM SIGMOD International Conference on Management of Data, pages 93-104, 2000\\
+\url{http://www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf}
+
+\bibitem{multilevel-surprise}
+C. Shahabi, X. Tian, and W. Zhao. TSA-tree (2000)\\
+\textit{A wavelet-based approach to improve the efficiency of multilevel surprise and trend queries on time-series data},
+In Statistical and Scientific Database Management, pages 55-68, 2000.\\
+\url{https://infolab.usc.edu/DocsDemos/pakdd01.pdf}
+
+\bibitem{global-local-outliers}
+C.Shahabi, S. Chung, M.Safar and G.Ha jj (2001)\\
+\textit{2D TSA-tree: A Wavelet-Based Approach to Improve the Efficiency of Multi-Level Spatial Data Mining},
+Technical Report 01-740, Department of Computer Science, University of Southern California. (2001)\\
+\url{https://pdfs.semanticscholar.org/39c5/5ee09a2c49e736de730e2cc7cc61f789ace1.pdf}
+% Tree splitting each signal in 2, a low-pass and a high-pass signal – Detect global outlier regions and local outliers within regions
+
+\bibitem{anomaly-3}
+F. Angiulli and C. Pizzuti. (2002)\\
+\textit{Fast outlier detection in high dimensional spaces},In PKDD '02: Proceedings
+of the 6th European Conference on Principles of Data Mining and Knowledge Discovery, pages 15-26,
+2002
+\url{https://link.springer.com/chapter/10.1007/3-540-45681-3_2}
+
+% Multiscale timeseries + multiscale entropy (Computed for several down-samples of the original timeseries)
+\bibitem{multiscale-timeseries}
+Costa M, Goldberger AL, Peng CK (2002)\\
+\textit{Multiscale entropy analysis of complex physiologic time series},
+Phys Rev Lett 2002, 89: 068102. 10.1103/PhysRevLett.89.068102\\
+\url{https://dbiom.org/files/publications/Peng_MultiscaleEntropyAnalysisComplexPhysiologicTimeSeries.pdf}
+
+% Parameter-free clustering of similar time series
+\bibitem{parameter-free-clustering}
+Keogh, E., Lonardi, S., Ratanamahatana, C. (2004)\\
+\textit{Towards Parameter-Free Data Mining},
+In proceedings of the 10th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.\\
+\url{http://www.cs.ucr.edu/~eamonn/SIGKDD_2004_long.pdf}
+
+\bibitem{detecting-anomalies}
+Umaa Rebbapragada , Pavlos Protopapas , Carla E. Brodley , Charles Alcock (2009)\\
+\textit{Finding anomalous periodic time series}
+Machine Learning, v.74 n.3, p.281-313, March 2009. doi: 10.1007/s10994-008-5093-3\\
+\url{https://arxiv.org/pdf/0905.3428.pdf}
+
+\bibitem{incident-diagnosis}
+Zhang, Dongmei and Lou, Jian-Guang and Ding, Justin and Fu, Qiang and Lin, Qingwei (2014)\\
+\textit{Correlating Events with Time Series for Incident Diagnosis},
+SigKDD'14, July 2014\\
+\url{https://www.microsoft.com/en-us/research/publication/correlating-events-time-series-incident-diagnosis-2/}
+
+% % Down-sampling time-series and measuring information lost
+% \bibitem{downsampling}
+% H. Cui, K. Keeton, I. Roy, K. Viswanathan, and G. R. Ganger (2015)\\
+% \textit{Using data transformations for low-latency time series analysis},
+% In Proceedings of the Sixth ACM Symposium on Cloud Computing, pages 395-407. ACM, 2015\\
+% \url{https://www.labs.hpe.com/techreports/2015/HPL-2015-74.pdf}
+
+\end{thebibliography}
+
+
+% \pagebreak
+
+% \tableofcontents
+
+\end{document}

@@ -1,0 +1,185 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{textcomp}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[ruled,vlined]{algorithm2e}
+\newtheorem{thm}{Theorem}
+\definecolor{gris25}{gray}{0.80}
+\newcommand{\encadre}[1]{\fcolorbox{black}{gris25}{\begin{minipage}{1.0\textwidth}\medskip #1 \vspace{0.1pt}\end{minipage}}}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{cor}[thm]{Corollaire}
+\def\N{{\mathbb{N}}}
+\def\R{{\mathcal{R}}}
+\def\RO{{\mathcal{R}_{opt}}}
+\def\RA{{\mathcal{R}_{alg}}}
+
+\title{\textsc{Degree Project - Related Work} \\ Correlating event time-series with underlying sensor measures}
+\author{Alexandre GUINAUDEAU \href{mailto:alegui@kth.se}{alegui@kth.se}\\
+Supervisor: Pawel Herman\\
+Examiner: Hedvig Kjellstr{\"o}m}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\section*{Related Work}
+
+% My thesis is motivated by a real-world application of incident diagnosis.
+In a manufacturing plant, an aircraft, an electronic intensive care unit or a data center, many sensors continuously monitor many parameters of the environment. As more and more "smart" systems install sensors to monitor the environment, it is vital to be able to make a good use of the data.
+These systems can have hundreds or thousands of sensors with sub-second sampling.
+With this amount of data, diagnosing incidents requires an efficient processing of the data.
+Finding the sensors that contain useful information is critical to understand the circumstances of the incident and troubleshoot it. However, there has been little work addressing the specific issue of incident diagnosis, mostly because of the sensitivity of sensor data.\\
+
+Several tools exist to analyze the correlation between continuous time series \cite{tool-continuous}, or between events \cite{tool-event1, tool-event2, tool-event3}, but they do not perform well when it comes to correlating continuous time series and events. However, sensor data is heterogeneous: it can be continuous, discrete, categorical or binary.
+Usual measures of correlation such as the Pearson and Spearman correlation do not perform well on this kind of data \cite{incident-diagnosis}. Therefore, we have to find other ways of defining correlation, or to map continuous timeseries to event timeseries to use existing tools.\\
+
+A lot of work has been done to detect anomalies in continuous time series. Most sensor data - such as Climate \cite{climate}, Intensive Care Units \cite{icu} or computer resources \cite{incident-diagnosis} - has natural frequencies.
+It is therefore possible to find pseudo-periods in the data that facilitate its pre-processing and enable multi-scale analysis \cite{multiscale-timeseries}.
+In other words, the time series can be decomposed into scales, in order to detect both local \cite{anomaly-1, anomaly-2, anomaly-3} and global anomalies \cite{lof, global-local-outliers}.
+Shahabi et al. even defined a surprise score that enables the comparison of all of these potential outliers, regardless of the scale \cite{multilevel-surprise}.
+
+For categorical time series, change points are natural outliers that could induce failures in the system \cite{categorical-time-series, detect-change-points}.
+
+Finally, raw or derived timeseries \cite{parameter-free-clustering} can be clustered in order to find timeseries that are similar to the failure time series, and therefore likely to be correlated. \\
+
+\clearpage
+
+\begin{thebibliography}{9}
+% Climate
+\bibitem{climate}
+Claude Frankignoul, Klaus Hasselmann (1977) \\
+\textit{Stochastic climate models, Part II - Application to sea-surface temperature anomalies and thermocline variability},
+Tellus, 29:4, 289-305\\
+\url{https://doi.org/10.3402/tellusa.v29i4.11362}
+
+% Categorical Time series
+\bibitem{categorical-time-series}
+David S. Stoffer, David E. Tyler, Andrew J. McDougall (1993)\\
+\textit{Spectral Analysis for Categorical Time Series: Scaling and the Spectral Envelope},
+Biometrika Vol. 80, No. 3, pp. 611-622\\
+\url{https://www.researchgate.net/profile/David_Tyler2/publication/239726763_Spectral_Analysis_for_Categorical_Time_Series_Scaling_and_the_Spectral_Envelope/links/0046352d842c990d8d000000.pdf}
+
+% distance-based outliers
+\bibitem{anomaly-1}
+E. M. Knorr and R. T. Ng. (1998)\\
+\textit{Algorithms for Mining Distance-Based Outliers}, In Proceedings of the 24th
+International Conference on Very Large Databases (VLDB), pages 392-403, 1998.\\
+\url{http://www.vldb.org/conf/1998/p392.pdf}
+
+% Iterative partitioning of time segments to detect change points
+\bibitem{detect-change-points}
+Valery Guralnik, Jaideep Srivastava (1999)\\
+\textit{Event Detection from Time Series Data}, In Proceedings of the Fifth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD'99), pp. 33-42, August 15-18, 1999, San Diego, CA, USA. \\
+\url{http://dmr.cs.umn.edu/Papers/P1999_6.pdf}
+
+% Different kinds of sensors:
+% Intensive Care Unit => alerts based on hardcoded thresholds
+\bibitem{icu}
+M.-C. Chambrin, P. Ravaux, D. Calvelo-Aros, A. Jaborska, C. Chopin, B. Boniface (1999)\\
+\textit{Multicentric study of monitoring alarms in the adult intensive care unit (ICU): a descriptive analysis},
+Intensive Care Medicine, Volume 25, Issue 12, pp 1360-1366\\
+\url{https://doi.org/10.1007/s001340051082}
+
+\bibitem{anomaly-2}
+S. Ramaswamy, R. Rastogi, and K. Shim. (2000)\\
+\textit{Efficient algorithms for mining outliers from large data sets}, In
+SIGMOD '00: Proceedings of the 2000 ACM SIGMOD international conference on Management of
+data, pages 427-438, 2000.
+\url{https://dl.acm.org/citation.cfm?id=335437&dl=ACM&coll=DL&CFID=841695128&CFTOKEN=52089307}
+
+\bibitem{lof}
+M. M. Breunig, H. Kriegel, R. T. Ng, and J. Sander (2000)\\
+\textit{LOF: Identifying density-based local outlier}
+In Proceedings of the ACM SIGMOD International Conference on Management of Data, pages 93-104, 2000\\
+\url{http://www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf}
+
+\bibitem{multilevel-surprise}
+C. Shahabi, X. Tian, and W. Zhao. TSA-tree (2000)\\
+\textit{A wavelet-based approach to improve the efficiency of multilevel surprise and trend queries on time-series data},
+In Statistical and Scientific Database Management, pages 55-68, 2000.\\
+\url{https://infolab.usc.edu/DocsDemos/pakdd01.pdf}
+
+\bibitem{global-local-outliers}
+C.Shahabi, S. Chung, M.Safar and G.Ha jj (2001)\\
+\textit{2D TSA-tree: A Wavelet-Based Approach to Improve the Efficiency of Multi-Level Spatial Data Mining},
+Technical Report 01-740, Department of Computer Science, University of Southern California. (2001)\\
+\url{https://pdfs.semanticscholar.org/39c5/5ee09a2c49e736de730e2cc7cc61f789ace1.pdf}
+% Tree splitting each signal in 2, a low-pass and a high-pass signal – Detect global outlier regions and local outliers within regions
+
+\bibitem{anomaly-3}
+F. Angiulli and C. Pizzuti. (2002)\\
+\textit{Fast outlier detection in high dimensional spaces},In PKDD '02: Proceedings
+of the 6th European Conference on Principles of Data Mining and Knowledge Discovery, pages 15-26,
+2002
+\url{https://link.springer.com/chapter/10.1007/3-540-45681-3_2}
+
+% Multiscale timeseries + multiscale entropy (Computed for several down-samples of the original timeseries)
+\bibitem{multiscale-timeseries}
+Costa M, Goldberger AL, Peng CK (2002)\\
+\textit{Multiscale entropy analysis of complex physiologic time series},
+Phys Rev Lett 2002, 89: 068102. 10.1103/PhysRevLett.89.068102\\
+\url{https://dbiom.org/files/publications/Peng_MultiscaleEntropyAnalysisComplexPhysiologicTimeSeries.pdf}
+
+% Parameter-free clustering of similar time series
+\bibitem{parameter-free-clustering}
+Keogh, E., Lonardi, S., Ratanamahatana, C. (2004)\\
+\textit{Towards Parameter-Free Data Mining},
+In proceedings of the 10th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.\\
+\url{http://www.cs.ucr.edu/~eamonn/SIGKDD_2004_long.pdf}
+
+\bibitem{tool-event1}
+P. Bahl, R. Chandra, A. Greenberg, S. Kandula, D. A. Maltz, and M. Zhang (2007)\\
+\textit{Towards highly reliable enterprise network services via inference of multi-level dependencies}, In SIGCOMM, 2007
+
+\bibitem{detecting-anomalies}
+Umaa Rebbapragada , Pavlos Protopapas , Carla E. Brodley , Charles Alcock (2009)\\
+\textit{Finding anomalous periodic time series}
+Machine Learning, v.74 n.3, p.281-313, March 2009. doi: 10.1007/s10994-008-5093-3\\
+\url{https://arxiv.org/pdf/0905.3428.pdf}
+
+\bibitem{tool-event2}
+S. Kandula, R. Mahajan, P. Verkaik, S. Agarwal, J. Padhye, and P. Bahl (2009)\\
+\textit{Detailed diagnosis in enterprise networks}, In Proc. SIGCOMM, pages 243-254, 2009.
+
+\bibitem{tool-event3}
+ J.-G. Lou, Q. Fu, Y. Wang, and J. Li (2010)\\
+\textit{Mining dependency in distributed systems through unstructured logs analysis}, SIGOPS Operating Systems Review, 41(1):91-96, 2010.
+
+\bibitem{tool-continuous}
+D. Wu, Y. Ke, J. X. Yu, S. Y. Philip, and L. Chen (2010)\\
+\textit{Detecting leaders from correlated time series}, In Database Systems for Advanced Applications, pages 352-367. Springer.
+
+\bibitem{incident-diagnosis}
+Zhang, Dongmei and Lou, Jian-Guang and Ding, Justin and Fu, Qiang and Lin, Qingwei (2014)\\
+\textit{Correlating Events with Time Series for Incident Diagnosis},
+SigKDD'14, July 2014\\
+\url{https://www.microsoft.com/en-us/research/publication/correlating-events-time-series-incident-diagnosis-2/}
+
+
+% % Down-sampling time-series and measuring information lost
+% \bibitem{downsampling}
+% H. Cui, K. Keeton, I. Roy, K. Viswanathan, and G. R. Ganger (2015)\\
+% \textit{Using data transformations for low-latency time series analysis},
+% In Proceedings of the Sixth ACM Symposium on Cloud Computing, pages 395-407. ACM, 2015\\
+% \url{https://www.labs.hpe.com/techreports/2015/HPL-2015-74.pdf}
+
+\end{thebibliography}
+
+
+% \pagebreak
+
+% \tableofcontents
+
+\end{document}
