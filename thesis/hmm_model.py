@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from hmmlearn.base import _BaseHMM
-from thesis import BaseModel
+from thesis import BaseModel, BaseGenerator
 
 
 class BinaryHMM(_BaseHMM):
-    def __init__(self, states, proba_change_state=0.01, transition_weights=None, random_state=None, **kwargs):
+    def __init__(self, states=11, proba_change_state=0.01, transition_weights=None, random_state=None, **kwargs):
         if isinstance(states, int):
             states = [i / float(states - 1) for i in range(0, states)]
         states = np.array(states)
@@ -61,11 +61,11 @@ class BinaryHMM(_BaseHMM):
 
 
 class HMMModel(BaseModel):
-    def __init__(self, hmm, error_threshold=0.01):
+    def __init__(self, error_threshold=0.01, **kwargs):
         assert 0 < error_threshold <= 1
         super(HMMModel, self).__init__(error_threshold)
-        assert isinstance(hmm, BinaryHMM)
-        self.hmm = hmm
+        self.kwargs = dict(kwargs)
+        self.hmm = BinaryHMM(**kwargs)
 
     def run(self, x, return_full_prediction=True):
         x = np.array(x)
@@ -76,26 +76,46 @@ class HMMModel(BaseModel):
             return len(set(pred)) > 1
         return np.vectorize(self.hmm.states_dict.__getitem__)(pred)
 
+    def has_change_point(self, x):
+        return self.run(x, return_full_prediction=False)
+
+    def max_param(self, x, min_states=1, max_states=1001):
+        if max_states - min_states > 1:
+            mean_states = (max_states + min_states) / 2
+            kwargs = self.kwargs
+            kwargs["states"] = mean_states
+            self.hmm = BinaryHMM(**kwargs)
+            if self.has_change_point(x):
+                return self.max_param(x, min_states, mean_states)
+            return self.max_param(x, mean_states, max_states)
+        return min_states
+
 
 if __name__ == "__main__":
-    n_components_ = 11
+    n_components_ = 101
+    proba_change_state_ = 0.1
+    transition_weights_ = None  # [n_comp / float(n_components_) for n_comp in range(n_components_, 1, -1)]
     hmm = BinaryHMM(n_components_,
-                    proba_change_state=0.1,
+                    proba_change_state=proba_change_state_,
                     # proba_change_state=np.array([0.001]*7 + [0.1]*3),
-                    transition_weights=[i / float(n_components_) for i in range(n_components_, 1, -1)])
+                    transition_weights=transition_weights_)
 
-    p1_ = 0.3
-    p2_ = 0.7
+    hmm_model = HMMModel(states=n_components_,
+                         proba_change_state=proba_change_state_,
+                         transition_weights=transition_weights_)
+    p1_ = 0.2
+    p2_ = 0.2
     n1_ = 80
-    n_ = 100
-    steps = 100
+    n_ = 1000
+    n_tries_ = 100
     results = {}
-    for i in range(steps):
-        x_ = list(np.random.rand(n_))
-        x_ = np.array([i_ < p1_ for i_ in x_[:n1_]] + [i_ < p2_ for i_ in x_[n1_:]])
+    bg = BaseGenerator([p1_, p2_], [n1_, n_-n1_])
+    for _ in range(n_tries_):
+        x_ = bg.generate(n_)
         x_ = x_.reshape(-1, 1)
         z_ = hmm.predict(x_)
         n_change_points = np.sum(z_[1:] != z_[:-1])
+        has_change_point = hmm_model.has_change_point(x_)
         if n_change_points not in results.keys():
             results[n_change_points] = 0
         results[n_change_points] += 1

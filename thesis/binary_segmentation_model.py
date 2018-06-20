@@ -42,19 +42,17 @@ class BinarySegmentationModel(BaseModel):
         self.memoization = {}
         self.gauss_threshold_function = gauss_threshold_function
 
-    def gauss_threshold(self, p, t):
-        if self.gauss_threshold_function is not None:
-            return self.gauss_threshold_function(p, t) * norm.ppf(1 - self.error_threshold / 2)
-        k = 1 + (0.5 - 12 * (p - 0.5) ** 6) * np.sqrt(t) * (0.4 * self.error_threshold + 0.01)
-        # k = 1
-        return k * norm.ppf(1 - self.error_threshold / 2)
+    @classmethod
+    def gauss_threshold(cls, a, p, t):
+        k = 1.24 + 0.93 * (0.5 - p) ** 2 + 2.72 * a + 0.0054 * np.sqrt(t)
+        return k * norm.ppf(1 - a / 2)
 
     def _min_window(self):
         gauss_threshold = norm.ppf(1 - self.error_threshold / 2)
         for n in range(1, int(1e6)):
             if self.test_statistic(n, n, 0, 1) > gauss_threshold:
                 return n
-        raise AttributeError("Gauss threshold is too large: %f" % self.gauss_threshold)
+        raise AttributeError("Gauss threshold is too large: %f" % gauss_threshold)
 
     @cast_all_args(float)
     def test_statistic(self, n1, n2, p1, p2):
@@ -63,48 +61,52 @@ class BinarySegmentationModel(BaseModel):
             return 0
         return abs(p1 - p2) / np.sqrt(p * (1 - p) * (1 / n1 + 1 / n2))
 
-    def segmentation(self, l, i=0, j=None, return_full_segmentation=True):
+    def max_param(self, l, i=0, j=None):
+        if j is None:
+            j = len(l)
+        return max([self.test_statistic(k - i, j - k, np.mean(l[i:k]), np.mean(l[k:j]))
+                    for k in range(i + self.window, j - self.window, self.window)])
+
+    def segmentation(self, l, i=0, j=None, only_check_if_change_point_exists=False):
         if (i, j) in self.memoization.keys():
             return self.memoization[i, j]
         if j is None:
             j = len(l)
         max_score = 0
-        score = 0
-        seg = [j]
+        seg = None
         p = np.mean(l[:j])
+        if only_check_if_change_point_exists:
+            if self.gauss_threshold_function is not None:
+                return self.max_param(l, i, j) > self.gauss_threshold_function(p, j - i)
+            return self.max_param(l, i, j) > BinarySegmentationModel.gauss_threshold(self.error_threshold, p, j - i)
+        candidates = []
         for k in range(i + self.window, j - self.window, self.window):
             n1 = k - i
             n2 = j - k
             p1 = np.mean(l[i:k])
             p2 = np.mean(l[k:j])
             z = self.test_statistic(n1, n2, p1, p2)
-            if z > self.gauss_threshold(p, j):  # split at k?
-                if return_full_segmentation is False:
-                    return True
-                # score1, seg1 = self.segmentation(l, i, k)
-                score2, seg2 = self.segmentation(l, k, j)
-                # score2, seg2 = self._segmentation(l, k, j, t)
-                score = score2 + abs(p1-p2)
-                # score = score1/len(seg1) + score2/len(seg2) + z
+            if z > BinarySegmentationModel.gauss_threshold(self.error_threshold, p, j-i):  # split at k?
+                candidates.append(k)
+                score = abs(p1-p2)
                 if score > max_score:
                     max_score = score
-                    seg = [k] + seg2
-                    # seg = seg1 + [k] + seg2
+                    seg = k
+        if seg is None:
+            return [j]
+        return self.segmentation(l, i, seg) + self.segmentation(l, seg, j)
 
-        if return_full_segmentation is False:
-            return False
-
-        self.memoization[i, j] = score, seg
-        return score, seg
-
-    def run(self, x, return_full_prediction=True):
+    def run(self, x, only_check_if_change_point_exists=False):
         x = np.array(x)
-        if return_full_prediction is False:
-            return self.segmentation(x, return_full_segmentation=False)
-        change_points = [0] + self.segmentation(x)[1]
+        if only_check_if_change_point_exists is True:
+            return self.segmentation(x, only_check_if_change_point_exists=True)
+        change_points = [0] + self.segmentation(x)
         n_change_points = len(change_points)-1
         probabilities = [np.mean(x[change_points[i]:change_points[i+1]]) for i in range(n_change_points)]
         return self.change_points_to_sequence(change_points, probabilities)
+
+    def has_change_point(self, x):
+        return self.segmentation(x, only_check_if_change_point_exists=True)
 
     def fit(self, probability, max_observations=1000, n_tries=100):
         all_max = []

@@ -94,4 +94,10 @@ MANIFEST
 .mypy_cache/
 .gitignore
 .idea/
-thesis/data/*/
+data/
+img/
+stats/
+*.png
+*.csv
+
+# images

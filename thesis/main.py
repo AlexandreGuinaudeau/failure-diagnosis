@@ -5,19 +5,22 @@ from thesis import BaseGenerator, BinarySegmentationModel, HMMModel, BinaryHMM
 if __name__ != "__main__":
     raise NotImplementedError
 
-bg = BaseGenerator([0.3, 0.01, 0.5], [500, 1000, 400])
-x = bg.generate(5000)
+bg = BaseGenerator([0.3, 0.01, 0.5], [50, 100, 40])
+x = bg.generate(500)
 print x
 
 # bsm = BinarySegmentationModel(0.05)
 # hmm = HMMModel(BinaryHMM(11))
 # hmm.plot_prediction(x, bg, show=False)
-for threshold in [0.1, 0.05, 0.02]:
-    bsm = BinarySegmentationModel(threshold)
-    bsm.plot_prediction(x, bg, show=False)
+colors = ['y', 'c', 'k']
+thresholds = [0.1, 0.01, 0.001]
+for i in range(len(thresholds)):
+    bsm = BinarySegmentationModel(thresholds[i])
+    bsm.plot_prediction(x, bg, show=False, plot_x=False, color=colors[i],
+                        label="Proba %s - score=%s" % (str(0.0001), bsm.score(x, bg)))
 
-bsm = BinarySegmentationModel(0.01)
-bsm.plot_prediction(x, bg)
+bsm = BinarySegmentationModel(0.0001)
+bsm.plot_prediction(x, bg, label="Proba %s - score=%s" % (str(0.0001), bsm.score(x, bg)))
 
 # z = bsm.change_points_to_sequence([0] + list(np.cumsum(bg.durations[:-1])) + [len(x)], bg.probabilities)
 # y = bsm.segmentation(x)
