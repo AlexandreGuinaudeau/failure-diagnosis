@@ -25,16 +25,19 @@ class MonteCarloResult:
         else:
             out = os.path.join(dir_path, out)
         self.out = out
+        restored = False
         if arrays is not None:
             self.arrays = pd.DataFrame(data=arrays, columns=tags)
         else:
             assert out is not None
             self.arrays = self.restore()
+            restored = True
         if tags is None:
             tags = self.arrays.columns
         self.tags = tags
         self.kwargs = dict(kwargs)
-        self.save()
+        if not restored:
+            self.save()
 
     def __str__(self):
         return "<MonteCarloResult shape=%s tags=%s out=%s/>" % (str(self.arrays.shape), str(self.tags), str(self.out))
@@ -208,7 +211,7 @@ def monte_carlo_best_split(p1, p2, n, n_tries, precision, error_threshold):
 def plot_cube(fun, x, y, label_prefix="", title=None, xlabel=None, ylabel=None):
     """
     Plots z=fun(x, y) with x as axis, for each value of y
-    fun returns (actual, theory)
+    fun returns (monte_carlo, theory)
     """
     if len(x) == 1 or len(y) == 1:
         return
@@ -225,24 +228,61 @@ def plot_cube(fun, x, y, label_prefix="", title=None, xlabel=None, ylabel=None):
     plt.show()
 
 
-def fit_polynom(proba, alpha, max_t, n_tries, fit_intercept=True, weight=False):
+def _plot_cube(f, x_label, y_label, z_label, score_label, x, y_array, z_array):
+    plot_cube(f, y_array, z_array, label_prefix=z_label + ":",
+              title="%s=%s" % (x_label, x), xlabel=y_label, ylabel=score_label)
+
+
+def plot_all_cubes(fun_mc, fun_theory, x_label, y_label, z_label, score_label, x_array, y_array, z_array):
+    for x in x_array:
+        _plot_cube(lambda y, z: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   x_label, y_label, z_label, score_label, x, y_array, z_array)
+        _plot_cube(lambda z, y: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   x_label, z_label, y_label, score_label, x, z_array, y_array)
+
+    for y in y_array:
+        _plot_cube(lambda z, x: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   y_label, z_label, x_label, score_label, y, z_array, x_array)
+        _plot_cube(lambda x, z: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   y_label, x_label, z_label, score_label, y, x_array, z_array)
+
+    for z in z_array:
+        _plot_cube(lambda x, y: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   z_label, x_label, y_label, score_label, z, x_array, y_array)
+        _plot_cube(lambda y, x: (fun_mc(x, y, z), fun_theory(x, y, z)),
+                   z_label, y_label, x_label, score_label, z, y_array, x_array)
+
+
+def fit_polynom(proba, alpha, max_t, n_tries, fit_intercept=True, weight=False, model_class=BinarySegmentationModel):
+    assert model_class in (BinarySegmentationModel, HMMModel)
     X = []
     y = []
     weights = []
     for p in proba:
         for a in alpha:
             for t in max_t:
-                out = "z_value_p%i_obs%i_tries%i.csv" % (int(100 * p), t, n_tries)
-                X.append([(0.5-p)**2, a, np.sqrt(t)/100])
-                y.append(MonteCarloResult(out=out).sorted_values[int((1-a) * n_tries)]/norm.ppf(1 - a / 2)
-                         - (1-fit_intercept))
-                weights.append(t)
+                if model_class == BinarySegmentationModel:
+                    out = "z_value_p%i_obs%i_tries%i.csv" % (int(100 * p), t, n_tries)
+                    X.append([(0.5-p)**2, a, np.sqrt(t)/100])
+                    y.append(MonteCarloResult(out=out).sorted_values[int((1-a) * n_tries)]/norm.ppf(1 - a / 2)
+                             - (1-fit_intercept))
+                    weights.append(t)
+                else:
+                    out = "best_transition_probability_s%i_p%s_n%s_tries%s_precision%s_err%s.csv" \
+                          % (101, str(p), str(t), str(n_tries), str(0.001), str(0.01))
+                    X.append([a, a*abs(0.5-p)])
+                    y.append(np.percentile(MonteCarloResult(out=out).all_values*np.sqrt(t), int(100 * a)))
+                    weights.append(t)
 
     clf = linear_model.LinearRegression(fit_intercept=fit_intercept)
     clf.fit(X, y)
     score = 1 - clf.score(X, y, sample_weight=weights if weight else None)
-    print "z = %.2f + %.2f|0.5-p|^2 + %.2fa + %.2fsqrt(t)/100 +/- %.2f" \
-          % tuple([clf.intercept_ if fit_intercept else 1] + list(clf.coef_) + [score])
+    if model_class == BinarySegmentationModel:
+        print "z / norm.ppf(1 - a / 2) = %.2f + %.2f|0.5-p|^2 + %.2fa + %.2fsqrt(t)/100 +/- %.2f" \
+              % tuple([clf.intercept_ if fit_intercept else 1] + list(clf.coef_) + [score])
+    else:
+        print "ratio * sqrt(t) = %.2f + %.2fa + %.2fa|0.5-p| +/- %.2f" \
+              % tuple([clf.intercept_ if fit_intercept else 0] + list(clf.coef_) + [score])
     return clf.intercept_, clf.coef_
 
 
@@ -258,7 +298,7 @@ def transition_probability_for_state(states, p, max_t, precision=0.1, n_tries=10
     def wrapper(l):
         def fun(factor, i, j):
             return not HMMModel(error_threshold=error_threshold,
-                                proba_change_state=np.exp(factor),
+                                change_state_ratio=pow(10, factor),
                                 states=states,
                                 **kwargs)\
                 .has_change_point(l)
@@ -267,11 +307,38 @@ def transition_probability_for_state(states, p, max_t, precision=0.1, n_tries=10
     res = []
     for _ in range(n_tries):
         x = bg.generate(max_t)
-        res.append(np.exp(_dichotomy_search(wrapper(x), -3, 0, precision)))
+        res.append(pow(10, _dichotomy_search(wrapper(x), -3, 1, precision)))
     return MonteCarloResult(res, ["all_values"], out=out)
 
 
+def best_transition_probability(all_nstates, all_p, all_t, all_alpha, precision=0.001, n_tries=100):
+    i = 0
+    for t in all_t:
+        for p in all_p:
+            for nstates in all_nstates:
+                if not theory_is_significant(p, nstates, min(all_alpha), max(all_t)):
+                    continue
+                mc_result = transition_probability_for_state(nstates, p, t, precision=precision, n_tries=n_tries)
+                l_ = mc_result.all_values
+                for a in all_alpha:
+                    if not theory_is_significant(p, nstates, a, t):
+                        continue
+                    d_values[p, nstates, t, a] = np.percentile(l_, int(100 * a))
+                i += 1
+                print pretty_print_progress(float(i) / (len(all_t)*len(all_p)*len(all_nstates)), start)
+
+    plot_all_cubes(lambda p, t, a: d_values[p, 101, t, a] if (p, 101, t, a) in d_values.keys() else None,
+                   lambda p, t, a: HMMModel.change_state_ratio_theory(p, a, t),
+                   "Probability", "Observations", "Error", "Transition Probability Ratio",
+                   all_p, all_t, all_alpha)
+
+
+def theory_is_significant(p, n_states, alpha, max_observation):
+    return p*n_states > 1 and max_observation > 1.5 * np.log(1 - alpha) / np.log(max(p, 1 - p))
+
+
 # ### BOTH MODELS ### #
+
 
 def statistical_test_threshold(model_class, proba, alpha, max_t, n_tries=100, **kwargs):
     assert model_class in (BinarySegmentationModel, HMMModel)
@@ -308,21 +375,9 @@ def statistical_test_threshold(model_class, proba, alpha, max_t, n_tries=100, **
     def f(a_, p_, t_):
         return res[p_, t_].sorted_values[int((1-a_) * n_tries)]
 
-    for a in alpha:
-        plot_cube(lambda p, t: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), proba, max_t,
-                  label_prefix="Observations: ", title="alpha=%.2f" % a, xlabel="p", ylabel="t")
-        plot_cube(lambda t, p: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), max_t, proba,
-                  label_prefix="Probability: ", title="alpha=%.2f" % a, xlabel="t", ylabel="p")
-    for p in proba:
-        plot_cube(lambda a, t: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), alpha, max_t,
-                  label_prefix="Observations: ", title="probability=%.2f" % p, xlabel="a", ylabel="t")
-        plot_cube(lambda t, a: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), max_t, alpha,
-                  label_prefix="Error: ", title="probability=%.2f" % p, xlabel="t", ylabel="a")
-    for t in max_t:
-        plot_cube(lambda a, p: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), alpha, proba,
-                  label_prefix="Probability: ", title="observations=%i" % t, xlabel="a", ylabel="p")
-        plot_cube(lambda p, a: (f(a, p, t), BinarySegmentationModel.gauss_threshold(a, p, t)), proba, alpha,
-                  label_prefix="Error: ", title="observations=%i" % t, xlabel="p", ylabel="a")
+    plot_all_cubes(f, BinarySegmentationModel.gauss_threshold,
+                   "Error", "Probability", "Observations", "Z-value threshold",
+                   alpha, proba, max_t)
 
 
 def change_point_detection_probability(model_class, a, p1, t, p2, t_change, precision=0.01, states=None):
@@ -360,6 +415,7 @@ def plot_model_sensitivity(model_class, a, p1, t, p2s, t_changes=(0.5,), precisi
 
 
 if __name__ == "__main__":
+    # ### BinarySegmentation ###
     # all_proba = [0.1, 0.2, 0.3]  # np.arange(0.05, 1, 0.05)
     # all_alpha = [0.2, 0.1, 0.05, 0.01]  # [0.2, 0.1, 0.05, 0.04, 0.03, 0.02, 0.01]
     # all_max_t = [500, 1000]  # [100, 250, 500, 750, 1000, 1250, 1500, 1750, 2000]
@@ -368,76 +424,18 @@ if __name__ == "__main__":
     # statistical_test_threshold(HMMModel, all_proba, all_alpha, all_max_t, n_tries_, proba_change_state=0.5)
     # fit_polynom(all_proba, all_alpha, all_max_t, n_tries_, fit_intercept=False, weight=False)
 
-    # plot_model_sensitivity(HMMModel, 0.05, 0.2, 1000, list(np.arange(0.01, 0.4, .01)) + list(np.arange(0.4, 1, 0.1)),
-    #                        (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95))
+    plot_model_sensitivity(HMMModel, 0.05, 0.2, 1000, list(np.arange(0.01, 0.4, .01)) + list(np.arange(0.4, 1, 0.1)),
+                           (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95))
 
-    start = time.time()
-    max_observation_ = 1000
-    p_ = 0.2
-    all_states_ = [11, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501]
-    n_tries_ = 100
-    thresholds = [80, 95, 99]
-    d_values = {}
-    i = 0
-    for states_ in all_states_:
-        mc_result = transition_probability_for_state(states_, p_, max_observation_, n_tries=n_tries_)
-        l_ = mc_result.all_values
-        print states_, sorted(l_)
-        for t in thresholds:
-            i += 1
-            d_values[states_, t] = np.percentile(l_, t)
-            print pretty_print_progress(float(i)/(len(thresholds)*len(all_states_)), start)
-    for t in thresholds:
-        plt.plot(all_states_, [d_values[s, t] for s in all_states_], label="Confidence level: %i%%" % t)
-    plt.legend()
-    plt.show()
-
-    raise Exception
-
-    # n_tries_ = 100
-    # precision_ = 2e-3
-    # max_observation_ = 1000
-    # all_errs_ = np.array([0.01, 0.02, 0.05, 0.1])
-    #
-    # color_map = dict(zip([0, 1, 2, 3, 4, 5],
-    #                      ["#1F4B99", "#578FA1", "#BACBA1", "#F2BE75", "#CD7534", "#9E2B0E"]))
-    #
-    # d_values = {}
+    # ### HMM ###
     # start = time.time()
-    # for e_ind, error_threshold_ in enumerate(all_errs_):
-    #     for p_ind, p1_ in enumerate([0.01, 0.1, 0.2, 0.3, 0.4, 0.5]):
-    #         for p2_ind, p2_ in enumerate([0.01, 0.1, 0.2, 0.3, 0.4, 0.5]):
-    #             mc_result = monte_carlo_best_split(p1_, p2_, max_observation_, n_tries_, precision_, error_threshold_)
-    #             l_ = mc_result.all_values
-    #             d_values[error_threshold_, p1_, p2_] = np.percentile(l_, 95)
-    #
-    # for p1_ in [0.1, 0.2, 0.3, 0.4, 0.5]:
-    #     for p2_ in [0.1, 0.2, 0.3, 0.4, 0.5]:
-    #         values = []
-    #         for error_threshold_ in all_errs_:
-    #             values.append(d_values[error_threshold_, p1, p2_])
-    #         plt.plot(all_errs_, values, 'g' if p1_ == p2_ else 'r', label=str(abs(p1_-p2_)))
-    #         print(p1_, p2_, np.polyfit(all_errs_, values, 1))
-    #
-    # plt.plot(all_errs_, 0.4*all_errs_+0.01, 'b')
-    #
-    # # print "f(p1=%s, p2=%s, error=%s) = %s" \
-    # #       % (str(p1), str(p2), str(error_threshold_), str(np.percentile(l_, 95)))
-    #
-    # #     try:
-    # #         plt.hist(l_, bins=np.arange(0, 0.1, precision_), histtype="step", label=str(p2))
-    # #     except ValueError as e:
-    # #         if str(e) == "zero-size array to reduction operation minimum which has no identity":
-    # #             pass
-    # #         else:
-    # #             raise e
-    # plt.legend()
-    # plt.show()
-    #
-    # # p     | alpha | k
-    # # ------|-------|------
-    # # 0.2   | 0.1   | 0.035
-    # # 0.2   | 0.05  | 0.035
-    # # 0.2   | 0.03  | 0.025
-    # # 0.2   | 0.02  | 0.018
-    # # 0.2   | 0.01  | 0.01
+    # all_t_ = [25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000]
+    # all_states_ = [101]  # list(range(11, 101, 10)) + list(range(101, 251, 50))
+    # all_p_ = [0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5]
+    # n_tries_ = 100
+    # all_alpha_ = [0.2, 0.1, 0.05, 0.04, 0.03, 0.02, 0.01]
+    # d_values = {}
+    # i = 0
+
+    # best_transition_probability(all_states_, all_p_, all_t_, all_alpha_)
+    # fit_polynom(all_p_, all_alpha_, all_t_, n_tries_, fit_intercept=False, weight=True, model_class=HMMModel)
