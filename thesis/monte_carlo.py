@@ -5,13 +5,8 @@ from datetime import timedelta
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import pandas as pd
-from thesis import BaseGenerator, BinarySegmentationModel, HMMModel
+from thesis import BaseGenerator, BinarySegmentationModel, HMMModel, get_all_colors
 from sklearn import linear_model
-
-
-ALL_COLORS = ["#1F4B99", "#2B5E9C", "#38709E", "#48819F", "#5B92A1", "#71A3A2", "#8AB3A2",
-              "#A7C3A2", "#C7D1A1", "#EBDDA0", "#FCD993", "#F5C57D", "#EDB269", "#E49F57",
-              "#DA8C46", "#CF7937", "#C4662A", "#B8541E", "#AB4015", "#9E2B0E"]
 
 
 class MonteCarloResult:
@@ -216,7 +211,7 @@ def plot_cube(fun, x, y, label_prefix="", title=None, xlabel=None, ylabel=None):
     if len(x) == 1 or len(y) == 1:
         return
     plt.figure(figsize=(20, 10))
-    all_colors = [ALL_COLORS[int(i*20/len(y))] for i in range(len(y))]
+    all_colors =get_all_colors(len(y))
     for i, yi in enumerate(y):
         c = all_colors[i]
         plt.plot(x, [fun(xj, yi)[0] for xj in x], color=c, label="%s%.2f" % (label_prefix, yi))
@@ -311,8 +306,10 @@ def transition_probability_for_state(states, p, max_t, precision=0.1, n_tries=10
     return MonteCarloResult(res, ["all_values"], out=out)
 
 
-def best_transition_probability(all_nstates, all_p, all_t, all_alpha, precision=0.001, n_tries=100):
+def best_transition_probability(all_nstates, all_p, all_t, all_alpha, precision=0.001, n_tries=100, plot=True):
     i = 0
+    d_values = {}
+    start = time.time()
     for t in all_t:
         for p in all_p:
             for nstates in all_nstates:
@@ -327,10 +324,12 @@ def best_transition_probability(all_nstates, all_p, all_t, all_alpha, precision=
                 i += 1
                 print pretty_print_progress(float(i) / (len(all_t)*len(all_p)*len(all_nstates)), start)
 
-    plot_all_cubes(lambda p, t, a: d_values[p, 101, t, a] if (p, 101, t, a) in d_values.keys() else None,
-                   lambda p, t, a: HMMModel.change_state_ratio_theory(p, a, t),
-                   "Probability", "Observations", "Error", "Transition Probability Ratio",
-                   all_p, all_t, all_alpha)
+    if plot:
+        plot_all_cubes(lambda p, t, a: d_values[p, 101, t, a] if (p, 101, t, a) in d_values.keys() else None,
+                       lambda p, t, a: HMMModel.change_state_ratio_theory(p, a, t),
+                       "Probability", "Observations", "Error", "Transition Probability Ratio",
+                       all_p, all_t, all_alpha)
+    return d_values
 
 
 def theory_is_significant(p, n_states, alpha, max_observation):
@@ -397,24 +396,98 @@ def change_point_detection_probability(model_class, a, p1, t, p2, t_change, prec
     return np.mean([model.has_change_point(bg.generate(t)) for _ in range(n_tries)])
 
 
-def plot_model_sensitivity(model_class, a, p1, t, p2s, t_changes=(0.5,), precision=0.01):
+def plot_model_sensitivity(model_class, a, p1, t, p2s, t_changes=(0.5,), precision=0.01, recompute=False, show=True,
+                           **plot_kwargs):
     start = time.time()
-    all_colors = [ALL_COLORS[int(i * 20 / len(t_changes))] for i in range(len(t_changes))]
-    states = int(1 + 1/min([abs(p1-p2) for p2 in p2s if p1 != p2]))
+    all_colors = get_all_colors(len(t_changes))
     for j, t_change in enumerate(t_changes):
         if isinstance(t_change, float):
             t_change = int(t * t_change)
-        y = []
-        for i, p2 in enumerate(p2s):
-            y.append(change_point_detection_probability(model_class, a, p1, t, p2, t_change, precision, states))
-            print pretty_print_progress(float(i + j * len(p2s) + 1)/(len(p2s)*len(t_changes)), start)
-        plt.plot(p2s, y, color=all_colors[j], label="Change after %i of %i observations" % (t_change, t))
+        out = "%s_sensitivity_a%s_p_%s_t%s_change%s.csv" % (str(model_class), str(a), str(p1), str(t), str(t_change))
+        if MonteCarloResult.exists(out, force=recompute):
+            y = MonteCarloResult(out=out).all_values
+        else:
+            y = []
+            for i, p2 in enumerate(p2s):
+                y.append(change_point_detection_probability(model_class, a, p1, t, p2, t_change, precision, states=101))
+                print pretty_print_progress(float(i + j * len(p2s) + 1)/(len(p2s)*len(t_changes)), start)
+            y = MonteCarloResult({"all_values": y}, out=out).all_values
+        plt.plot(p2s, y, color=all_colors[j], label="Change after %i of %i observations" % (t_change, t), **plot_kwargs)
     plt.legend()
-    plt.title("Sensitivity of the Binary Segmentation Model")
-    plt.show()
+    d_names = {BinarySegmentationModel: "Binary Segmentation", HMMModel: "Hidden Markov"}
+    plt.title("Sensitivity of the %s Model" % d_names[model_class])
+    if show:
+        plt.show()
+
+
+def plot_model_delay(model_class, a, p1, t, p2s, max_wait, n_tries=100, precision=1, recompute=False, show=True,
+                     **plot_kwargs):
+    start = time.time()
+    all_colors = get_all_colors(len(p2s))
+    i = 0
+    for j, p2 in enumerate(p2s):
+        out = "%s_delay_a%s_p1_%s_p2_%s_t%s_wait%s.csv" % (str(model_class), str(a), str(p1),  str(p2), str(t), str(max_wait))
+        if MonteCarloResult.exists(out, force=recompute):
+            y = MonteCarloResult(out=out).all_values
+        else:
+            y = []
+            bg = BaseGenerator((p1, p2), (t, max_wait))
+
+            def wrapper(l):
+                def fun(k, i, j):
+                    return not model_class(error_threshold=a).has_change_point(l[:int(k)])
+                return fun
+
+            for _ in range(n_tries):
+                x = bg.generate(t+max_wait)
+                y.append(int(_dichotomy_search(wrapper(x), 0, t+max_wait, precision)))
+                i += 1
+            print pretty_print_progress(float(i)/(len(p2s)*n_tries), start)
+            y = MonteCarloResult({"all_values": y}, out=out).all_values
+        y = np.sort(y)
+        y = y[y < t+max_wait-1]
+        plt.plot(sorted(y), np.arange(0, float(len(y))/n_tries, float(1)/n_tries), color=all_colors[j],
+                 label="p2=%.2f" % p2, **plot_kwargs)
+    plt.legend(bbox_to_anchor=(1.04, 1))
+    d_names = {BinarySegmentationModel: "Binary Segmentation", HMMModel: "Hidden Markov"}
+    plt.title("Delay of the %s Model" % d_names[model_class])
+    if show:
+        plt.show()
 
 
 if __name__ == "__main__":
+    # ### REPORT PLOTS ### #
+    plt.figure(figsize=(20, 10))
+    p_ = 0.2
+    all_alpha_ = [0.2, 0.15, 0.1, 0.05, 0.01]
+    T_ = 100
+    n_states_ = 101
+    precision_ = 0.001
+    n_tries_ = 1000
+    # n_states <-> rho: all_nstates_ = list(range(6, 102, 5)), all_alpha_ = [0.2, 0.15, 0.1, 0.05, 0.01], plt.title("Independence of N and rho"), plt.xlabel("Number of states N")
+    # d_values = best_transition_probability(all_nstates_, [0.2], [T_], all_alpha_, precision=precision_, n_tries=n_tries_)
+    # for i, alpha_ in enumerate(all_alpha_):
+    #     plt.plot(all_nstates_, [d_values[p_, s, T_, alpha_] for s in all_nstates_], label="alpha=%.2f" % alpha_, color=colors[i])
+
+    # alpha <-> rho: all_alpha_ = np.arange(0.01, 0.5, 0.02), all_p_ = [0.1, 0.2, 0.3, 0.4, 0.5], plt.title("Relationship between alpha and rho"), plt.xlabel("Level of confidence alpha")
+    # d_values = best_transition_probability([n_states_], all_p_, [T_], all_alpha_, precision=precision_, n_tries=n_tries_, plot=False)
+    # for i, p_ in enumerate(all_p_):
+    #     plt.plot(all_alpha_, [d_values[p_, n_states_, T_, alpha_] for alpha_ in all_alpha_], label="p=%.2f" % p_, color=colors[i])
+
+    # T <-> rho
+    all_t_ = [25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000]
+    colors = get_all_colors(len(all_alpha_))
+    d_values = best_transition_probability([n_states_], [p_], all_t_, all_alpha_, precision=precision_,
+                                           n_tries=n_tries_, plot=False)
+    for i, alpha_ in enumerate(all_alpha_):
+        plt.plot(all_t_, [d_values[p_, n_states_, T_, alpha_] if theory_is_significant(p_, n_states_, alpha_, T_) else None for T_ in all_t_], label="alpha=%.2f" % alpha_, color=colors[i])
+        plt.plot(all_t_, [HMMModel.change_state_ratio_theory(0.4, alpha_, T_) for T_ in all_t_], color=colors[i], linestyle="dashed")
+    plt.title("Relationship between T and rho")
+    plt.xlabel("Number of observations T")
+    plt.ylabel("Maximum transition probability ratio rho")
+    plt.legend(loc="upper right")
+    plt.show()
+
     # ### BinarySegmentation ###
     # all_proba = [0.1, 0.2, 0.3]  # np.arange(0.05, 1, 0.05)
     # all_alpha = [0.2, 0.1, 0.05, 0.01]  # [0.2, 0.1, 0.05, 0.04, 0.03, 0.02, 0.01]
@@ -424,8 +497,16 @@ if __name__ == "__main__":
     # statistical_test_threshold(HMMModel, all_proba, all_alpha, all_max_t, n_tries_, proba_change_state=0.5)
     # fit_polynom(all_proba, all_alpha, all_max_t, n_tries_, fit_intercept=False, weight=False)
 
-    plot_model_sensitivity(HMMModel, 0.05, 0.2, 1000, list(np.arange(0.01, 0.4, .01)) + list(np.arange(0.4, 1, 0.1)),
-                           (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95))
+    # other_p_ = [0.01, 0.05] + list(np.arange(0.1, 1, .1)) + [1]
+
+    # plot_model_sensitivity(HMMModel, 0.05, p_, 100, other_p_,
+    #                        (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95), show=False)
+    #
+    # plot_model_sensitivity(BinarySegmentationModel, 0.05, p_, 100, other_p_,
+    #                        (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95), linestyle="dashed")
+
+    # plot_model_delay(HMMModel, 0.05, p_, 100, other_p_, 1000, show=False)
+    # plot_model_delay(BinarySegmentationModel, 0.05, p_, 100, other_p_, 1000, linestyle="dashed")
 
     # ### HMM ###
     # start = time.time()

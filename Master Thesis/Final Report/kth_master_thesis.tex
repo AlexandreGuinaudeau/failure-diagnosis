@@ -11,8 +11,8 @@
 \usepackage{hyperref}
 \usepackage[ruled,vlined]{algorithm2e}
 \newtheorem{thm}{Theorem}
-\definecolor{gris25}{gray}{0.80}
-\newcommand{\encadre}[1]{\fcolorbox{black}{gris25}{\begin{minipage}{1.0\textwidth}\medskip #1 \vspace{0.1pt}\end{minipage}}}
+\definecolor{gris25}{gray}{0.95}
+\newcommand{\encadre}[1]{\hspace{-20pt}\fcolorbox{black}{white}{\begin{minipage}{0.99\textwidth}\medskip #1 \vspace{5pt}\end{minipage}}\bigskip}
 \newtheorem{prop}[thm]{Property}
 \newtheorem{lem}[thm]{Lemme}
 \newtheorem{cor}[thm]{Corollaire}
@@ -58,12 +58,7 @@
 \begin{otherlanguage}{swedish}
   \begin{abstract}
   %TODO
-    Träutensilierna i ett tryckeri äro ingalunda en oviktig faktor,
-    för trevnadens, ordningens och ekonomiens upprätthållande, och
-    dock är det icke sällan som sorgliga erfarenheter göras på grund
-    af det oförstånd med hvilket kaster, formbräden och regaler
-    tillverkas och försäljas Kaster som äro dåligt hopkomna och af
-    otillräckligt.
+    \emph{I will translate my abstract once the English version has been approved.}
   \end{abstract}
 \end{otherlanguage}
 
@@ -101,7 +96,7 @@ equivalent to finding its change points.
 
 \section{Objective}
 
-The desired outcome of the degree project is to detect change points in the probability of occurrence of events. This has two main interests:
+Given a sequence of events, we intend to detect changes in the probability of occurrence. This has two main interests:
 
 \begin{itemize}
 \item Alert when events start occurring more frequently.
@@ -115,57 +110,56 @@ $$n \sim \dfrac{K}{\varepsilon^2}$$
 observations, for some $K$ independent of $\varepsilon$.
 So a change in probability of $0.1$ should be detected within the order of $n \sim 100$ observations.
 
+
+\paragraph{News value}
+
+In complex systems, it may be too time-consuming to monitor all the errors that occur. in that case, unusual errors are carefully troubleshooted, but intermittent and non-deterministic errors can end up being ignored. In that case, being able to flag when an error occurs more frequently than usual can be vital. Indicating precisely when the frequency increased significantly is also very useful to quickly understand the reason for this increase in frequency and troubleshoot the error.
+
 \section{Research question}
 
-\textbf{How precisely and how quickly can change points in frequency be detected?
-How big a change in the frequency of occurrence are we able to detect, and how many observations after the change are required to guarantee that the frequency has changed with high confidence?}
+\textbf{What is the sensitivity of detection of changes in the frequency of event occurrence? In other words, given a target level of confidence, what is the minimum change in the frequency that can be identified, and what delay is necessary to reliably identify this change?}
 
 \medskip
 
 \paragraph*{Examination method}
 
-First, we will generate sequences of probabilities of occurrence in a \emph{realistic} way (See \ref{part-lifetime}), and derive events based on those probabilities.
-Then, we will try to estimate the underlying probabilities based on the events.
-Once this is set up, define a metric to measure the error in the estimation of the underlying sequence of probabilities, and compare different candidate models to find the one that performs best.
+First, we will find the tuning of the parameters both candidate models that provide the target confidence level. 
+Therefore, we will use the mathematical definition to estimate the how the parameters should be tuned, and we will approximate the actual parameters using Monte Carlo methods. 
 
-Depending on the complexity of the data, we will either use the mathematical definition or approximate it using Monte Carlo methods to evaluate the performance of models.
+Then, we will compare the sensitivity and delay of the models. We will generate data with a single change point, and measure the number of observations required to detect the change, depending on the amplitude of the change.
 
-\medskip
-
-As we will generate the data, it is important to clearly define the assumptions.
-Otherwise, the results will be biased by the way we generated the data and will not correctly evaluate the models.
-We will generate probabilities of occurrences that either change abruptly, for instance when a part breaks, or that slowly increase, to model the natural deterioration of a part (as explained in \ref{part-lifetime}).
-
+Finally, we will discuss how well both models could be generalized to real data. 
+To emulate real data do so, we will generate sequences of probabilities of occurrence in a \emph{realistic} way (See \ref{part-lifetime}), and derive events based on those probabilities. Then, we will estimate the underlying probabilities based on the events, and compare the candidate models to find the one that performs best. We will also compare efficiency of the algorithms (in terms of memory and computation), and see how easily they could be adapted to online data.
 
 \paragraph*{Expected scientific results}
 
 The hypothesis being tested is that we are able to detect \emph{significant} changes in probability of occurrence, \emph{shortly} after the change. 
-We want to define as few parameters as possible, such as a confidence threshold for the null hypothesis, or the transition probability for the Hidden Markov Model.
+The only parameter of our model should be the target level of confidence (for instance $95\%$).
+Performing maintenance is usually very expensive as it often requires to replace a part. Therefore, we only want to trigger an alert if we have sufficiently high  confidence that a change in the frequency actually occurred.
 
 Given these, we want to measure:
 
 \begin{itemize}
 
-\item the minimal increase or decrease in the frequency of occurrence that we are able to detect
-\item the minimal number of events required to detect a change
+\item the \emph{sensitivity} of the detection: the minimal increase or decrease in the frequency of occurrence that we are able to detect
+\item the \emph{delay} of the detection: the minimal number of observations after a change in frequency required to detect a change
 
 \end{itemize}
 
-To measure the accuracy of our estimations, we can use the $\mathcal{L}_2$ score to measure the error with the true underlying distribution. We will also measure the error in the detection of a change point, to determine whether we are able to pinpoint the factor that triggered the change.
+To measure the accuracy of our estimations, we will compare their sensitivity and delay on generated data with a single change point.
 
-\section{News value}
+For data with multiple change points, we would use the $\mathcal{L}_2$ score to measure the error with the true underlying distribution.
 
+\section{Literature study}
 
-In complex systems, it may be too time-consuming to monitor all the errors that occur. in that case, unusual errors are carefully troubleshooted, but intermittent and non-deterministic errors can end up being ignored. In that case, being able to flag when an error occurs more frequently than usual can be vital. Indicating precisely when the frequency increased significantly is also very useful to quickly understand the reason for this increase in frequency and troubleshoot the error.
-
-\section{Generating events}
+\paragraph{Generating events}
 \label{part-lifetime}
 
 To generate our data, we will simulate part failures that lead to an increased probability of triggered events. Interestingly, the lifetime of organisms, devices, structures, materials in both biological and engineering sciences have very similar behaviors. 
 For example, business mortality \parencite{lomax1954}, failures in the air-conditioning equipment of aircrafts or in semiconductors \parencite{proschan1963} and integrated circuit modules \parencite{saunders1983} all have similar behaviors. 
 These can be modeled with a mixture of exponential or Weibull-Lomax distributions. In particular, the Weibull distribution \parencite{weibull1951} is the most widely used to model the lifetime of parts \parencite{anderson2005}, as it has a limited number of parameters which can easily be interpreted, and captures both the \emph{infant mortality} of defective parts and the exponential distribution of events that occur independently at a constant average rate, for normal parts. The two parameters are used to reflect these two elements, the defects in the material and the average rate of failure.
 
-\section{Detection of probability change-points}
+\paragraph{Detection of probability change-points}
 
 The detection of a change point can be formulated as a null hypothesis that determines whether all events were drawn from the same binomial distribution \parencite{wasserman2004}.
 To generalize this to multiple change points, we could use a sliding window. However, this is often unstable because the change point detection is performed on small regions, and therefore isn't always statistically significant \parencite{esteller2001, harchaoui2010}.
@@ -175,11 +169,9 @@ Therefore, we will also explore binary segmentation or dynamic programming to ge
 Another lead could be to use Hidden Markov Models \parencite{baum1966}, which seems well-adapted to our use case, as we are trying to guess the hidden probability state that was used to generate the events. Chis and Harrison \parencite{chis2015} suggest a solution to adapt the model to online problems by estimating its updated parameters. This can be used to avoid recomputing the hidden state with new values.
 
 
-\chapter{Problem definition}
+\section{Specific problem definition}
 
-\section{Data generation}
-
-\subsection{Definitions}
+\paragraph{Definitions}
 
 As we will generate our data, it is important to clearly specify how the data is generated and what assumptions are made.
 
@@ -188,16 +180,14 @@ This logging system stores a sequence of observations $t$, for which events eith
 These observations could be of various time scales, either periodic (e.g. 1 per second) or based on iterations (e.g. one per cycle in manufacturing). 
 We consider a single event $e$, independently of the other ones that were recorded by the logging system.
 
-\paragraph{Definitions}
-
 \begin{itemize}
 \item We call \emph{observation} $t$ each iteration where a value is stored by the logger.
 
-\item We call \emph{event} or \emph{error} $e$ a specific kind of event that was recorded by a logging system. For each observation $t$, we note $e(t)=1$ if the event occurred and $e(t)=0$ otherwise. We note $p(t)=\P[e(t)=1]$ the probability that $e$ occurs at instant $t$.
+\item We call \emph{event} or \emph{error} $e$ a specific kind of event that was recorded by a logging system. For each observation $t$, we note $y_t=1$ if the event occurred and $y_t=0$ otherwise. We note $p(t)=\P[y_t=1]$ the probability that $e$ occurs at instant $t$.
 
 \item We call \emph{part} a physical part of our system; it can be anything from a valve to a sensor. The failure or wear of such a part could increase the probability of occurrence of $e$, and maintenance or replacement of the part could decrease it.
 
-\item We call change point any of these changes affecting a part which has an impact on $e$.
+\item We call \emph{change point} any of these changes affecting a part which has an impact on $e$.
 \end{itemize}
 
 \paragraph{Assumptions}
@@ -205,30 +195,133 @@ We consider a single event $e$, independently of the other ones that were record
 We assume that the event occurs with a fixed probability $p$, independent of previous events, between two consecutive change points. 
 Note that this is not a lost in generality intrinsically, given we could consider change points at every observation. However, we will in general consider a low frequency of change points.
 
+To tune the parameters of our models, we will consider events generated with a constant probability $p$. 
+To evaluate their sensitivity and delay, we will consider events generated with to probabilities $p_1$ and $p_2$, and a single change point.
+To evaluate their capacity to generate to real-life data, we will use a Weibull distribution to model the lifetime of parts, and derive series from successive underlying probabilities.
 
-\subsection{Lifetime of a part}
+\section{Using a null hypothesis to tune our models}
 
-As mentioned in \ref{part-lifetime}, we will use a Weibull distribution to model the lifetime of parts. 
+As mentioned earlier, we want to define models with a single parameter, the target level of confidence $\alpha$. We will tune the parameters of our models such that the probability that we erroneously detect a change point is at most $\alpha$. 
+Given a sequence of events $y_0, \ldots, y_{T-1}$, we consider the null hypothesis:\\
 
-\section{Model comparison}
+\encadre{$H_0$: All events $y_0, \ldots, y_{T-1}$ were drawn from the same Bernoulli distribution $B(1,|y|)$}
 
 
-\chapter{Hidden Markov Models}
+If the model is correctly tuned, we should reject this null hypothesis with a probability of $\alpha$ for distributions drawn from a constant distribution. Therefore, when our model detects a change point, we can assert that the underlying probability of occurrence has changed with a confidence of $1-\alpha$.
 
-\section{Parameters and output}
+\chapter{Hidden Markov Model}
+
+\section{Mathematical definition}
+\label{sec:hmm_math_definition}
+
+The first model we consider to estimate the underlying probabilities is a Hidden Markov Model, where the hidden states are the underlying probabilities.
+
+We note $x_t$ the hidden state at $t$ and $y_t$ the corresponding observation. The parameters of a HMM are:
+
+\begin{itemize}
+\item The number of states $N$. In our case states correspond to probabilities $p_0, \ldots, p_{N-1}$
+\item The number of observations $T$, observations are noted $y_0, \ldots, y_{T-1}$
+\item The initial hidden state $\varphi_i = \P[x_0=p_i]$
+\item The transition probabilities $\phi_{i,j} = \P[x_{t+1}=p_j\ |\ x_t = p_i]$
+\item The distribution from which observations are drawn. Here, observations are drawn from a Bernoulli distribution: $y_t \sim B(1, x_t)$
+\end{itemize}
+
+Given $N$, there are $\mathcal{O}(N^2)$ independent parameters $\varphi_i$ and $\phi_{i,j}$. We will make a few additional assumptions to reduce the complexity. 
+
+\paragraph{Uniformly distributed states}
+We assume the states are uniformly distributed on the interval $[0, 1]$:
+$$\forall i \in [|0, N-1|], p_i = \dfrac{i}{N-1}$$
+This is not a loss in generality, as we can increase the number of states to cover any possible probability $p \in [0,1]$
+
+\paragraph{Uniform prior distribution}
+No particular prior distribution is assumed, so the initial states are sampled from a discrete uniform distribution over all possible states:
+
+$$\forall i \in [|0, N-1|], \varphi_i = \dfrac{1}{N}$$
+
+\paragraph{Uniform change amplitude}
+We also assume that when a change occurs, all new states are equiprobable, in other words that, given $i$, $\phi_{i,j}$ is constant for any $j \neq i$. 
+
+\paragraph{Uniform change likelihood}
+We also assume that probability that a change occurs is independent of the current state, in other words that $\phi_{i,i}$ is constant. This assumption is more debatable, as when errors occur frequently, operators are likely to do maintenance operations that will decrease the frequency of occurrence. For the sake of simplicity, we will make this assumption for now and discuss this choice in the later (See \ref{chap: discussion}).
+
+With these two assumptions on $\phi$, the matrix of transition probabilities now has two values, one for diagonal coefficients $\phi_{i,i}$ and one for extra-diagonal coefficients $\phi_{i,j}$. We note $\rho$ the ratio between these two coefficients:
+
+$$\rho = \dfrac{\phi_{0,1}}{\phi_{0,0}}$$
+
+As for each row, the sum of its coefficients is 1, we can derive the value of all the transition probabilities from $\rho$:
+
+$$
+\phi_{i,j} = \left\{
+\begin{array}{ll}
+\dfrac{1}{1 + (N-1) \rho} & \text{if } i = j  \\
+&\\
+\dfrac{\rho}{1 + (N-1) \rho} & \text{if } i \neq j
+ \end{array}\right.
+$$
+
+With these assumptions, we have reduced the complexity of our model to a single parameter $\rho$. In the next section, we will find the best value of $\rho$ given the number of states $N$, the number of observations $T$, the probability of occurrence $p$ and the target level of confidence $\alpha$.
 
 \section{Tuning the Hidden Markov Model}
 
-\section{Results and Discussion}
+The Baum-Weich algorithm \parencite{baum1966} provides the most likely set of underlying probabilities, given the parameters of the model and a sequence of observations.
+We will use this algorithm to detect change points, when the most probable state contains at least two different states.
+
+\section{Mathematical interpretation}
+
+\paragraph{Influence of $\rho$ on the detection of change points}
+Our Hidden Markov Model has been reduced to a single parameter $\rho$. It important to first understand how this parameter will impact the behavior of the HMM. When $\rho$ increases, the relative probability of changing state increases, so the HMM is more likely to detect a change point. 
+Our goal is to find the maximum value of $\rho$ that detects a change point with a probability at most $\alpha$.
+
+\paragraph{Influence of $N$ on $\rho$}
+To determine the most likely sequence of underlying states, the Baum-Weich algorithm does a forward pass during which it computes the most likely state up to the current observation, and then a backward pass where it updates the likelihoods that could have lead to the final state. 
+
+This can be seen as a trade-off between two opposite "energies": changing the underlying state from $i$ to $j$ costs $\mathcal{E}_{i \rightarrow j} \sim \frac{\phi_{i,j}}{\phi_{i,i}}$, while staying in the current state $i$ costs $\mathcal{E}_{i \not\rightarrow j} \sim \frac{\overline{p_i}}{\overline{p_j}}$ where $\overline{p_k}$ represents the probability of predicting the wrong state ($1-p_k$ if the even occurred, $p_k$ otherwise). The Baum-Weich algorithms finds the sequence of states that minimizes this energy: it is only worth changing state if many future observations are very unlikely the current state $i$. 
+
+Using our assumptions in \ref{sec:hmm_math_definition}, these energies become $\mathcal{E}_{i \rightarrow j} \sim \rho$ and $\mathcal{E}_{i \not\rightarrow j} \sim \frac{\overline{p_i}}{\overline{p_j}}$.
+Note that these energies are now independent of $N$: the only impact is that, for small values of $N$, all probabilities $p_i$ and $p_j$ will not be represented. In other words, there might not be the state corresponding to the actual underlying probability. However, for sufficient large value of $N$, $\rho$ is independent of $N$.
+ 
+The choice of $\rho$ as the single parameter to tune the model was not arbitrary: it is independent on the number of states $N$. Figure \ref{fig:hmm_nstates_rho} shows an example using Monte Carlo method with $n_{tries}=1000$ tries, where we approximate the optimal $\rho$ with a precision of $0.001$. In the rest of this report, we will use $N=101$ states, so that the states represent $0\%, 1\%, 2\%, \ldots, 100\%$.
+
+\begin{figure}[ht]
+\hspace{-50pt}
+\includegraphics[width=1.25\textwidth]{images/hmm_nstates_rho}
+\caption[caption]{Maximum transition probability ratio $\rho$ that does not detect a change point, for different levels of confidence $\alpha$\\
+For $p = 20\%$, $T = 100$, $n_{tries} = 1000$, $precision=0.001$}
+\label{fig:hmm_nstates_rho}
+\end{figure}
 
 
-\chapter{Null hypothesis}
+\paragraph{Influence of $\alpha$ on $\rho$}
+
+We expect $\rho$ to be an increasing function of the level of confidence $\alpha$: if we loosen our restrictions and accept a higher risk of erroneously detecting a change, then we can increase the transition probability ratio. When plotting some examples \ref{fig:hmm_alpha_rho}, it seems clear that for small values of $\alpha$, there is a linear correlation between $\alpha$ and $\rho$.
+
+\begin{figure}[ht]
+\hspace{-50pt}
+\includegraphics[width=1.25\textwidth]{images/hmm_alpha_rho}
+\caption[caption]{Maximum transition probability ratio $\rho$ that does not detect a change point, for different probabilities of occurrence $p$\\
+For $N = 101$, $T = 100$, $n_{tries} = 1000$, $precision=0.001$}
+\label{fig:hmm_alpha_rho}
+\end{figure}
+
+\subsection{Application to events derived from a constant probability}
+
+\subsection{Detection of a single change point}
+
+
+
+\chapter{Binary Segmentation Model}
+
+
+
+\chapter{Model comparison and Discussion}
+\label{chap: discussion}
+%TODO Discuss a more complex HMM
 
 \section{Detection of single change points}
 
 \section{Generalization to multiple change points}
 
-\section{Results and Discussion}
+\section{Efficiency and generalization to an online algorithm}
 
 
 \chapter{Conclusion}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6650) (preloaded format=pdflatex 2018.4.3)  31 MAY 2018 21:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6650) (preloaded format=pdflatex 2018.4.3)  24 JUN 2018 20:40
 entering extended mode
 **./kth_master_thesis.tex
 (kth_master_thesis.tex
@@ -1479,20 +1479,15 @@ g/pdftex.map}] [2
 
 
 ] [3]
-Underfull \hbox (badness 1097) in paragraph at lines 61--67
-\T1/lmr/m/n/12 Träutensilierna i ett tryckeri äro ingalunda en oviktig faktor, 
-för
- []
-
 Package babel Info: Redefining swedish shorthand "|
-(babel)             in language  on input line 67.
+(babel)             in language  on input line 62.
 Package babel Info: Redefining swedish shorthand "~
-(babel)             in language  on input line 67.
+(babel)             in language  on input line 62.
 Package babel Info: Redefining swedish shorthand "|
-(babel)             in language  on input line 67.
+(babel)             in language  on input line 62.
 Package babel Info: Redefining swedish shorthand "~
-(babel)             in language  on input line 67.
-[4
+(babel)             in language  on input line 62.
+ [4
 
 ] (kth_master_thesis.toc
 LaTeX Font Info:    Try loading font information for OT1+lmr on input line 10.
@@ -1548,12 +1543,12 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ] [6
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 86--89
+Underfull \hbox (badness 10000) in paragraph at lines 81--84
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
 
  []
 
@@ -1561,14 +1556,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 90--91
 
 ]
 Chapter 1.
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 107.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 102.
 
 
 ("/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/tex/late
 x/lm/ts1lmr.fd"
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Overfull \hbox (11.46686pt too wide) in paragraph at lines 108--109
+Overfull \hbox (11.46686pt too wide) in paragraph at lines 103--104
 []\T1/lmr/m/n/12 Troubleshoot errors by pinpointing when the probability of occ
 urrence
  []
@@ -1577,128 +1572,201 @@ urrence
 
 
 ]
-Overfull \hbox (5.41417pt too wide) in paragraph at lines 127--130
-[] []\T1/lmr/bx/n/12 Examination method[] \T1/lmr/m/n/12 First, we will generat
-e sequences of probabilities
+Overfull \hbox (2.8056pt too wide) in paragraph at lines 126--128
+\T1/lmr/m/n/12 both candidate models that provide the target confidence level. 
+Therefore,
  []
 
-[3] [4] [5]
-Chapter 2.
-[6
+[3]
+Underfull \hbox (badness 1087) in paragraph at lines 158--161
+\T1/lmr/m/n/12 failures that lead to an increased probability of triggered even
+ts.
+ []
 
-] [7]
+[4]
+Overfull \hbox (0.70343pt too wide) in paragraph at lines 195--197
+[] []\T1/lmr/bx/n/12 Assumptions[] \T1/lmr/m/n/12 We assume that the event occu
+rs with a fixed probability
+ []
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 204--206
+
+ []
+
+
+Overfull \hbox (0.72797pt too wide) in paragraph at lines 207--208
+[] [][][] 
+ []
+
+
+Underfull \hbox (badness 1226) in paragraph at lines 210--211
+\T1/lmr/m/n/12 with a probability of $\OML/lmm/m/it/12 $ \T1/lmr/m/n/12 for di
+stributions drawn from a constant
+ []
+
+[6]
+Chapter 2.
+
+Underfull \hbox (badness 1173) in paragraph at lines 237--238
+[] []\T1/lmr/bx/n/12 Uniform prior distribution[] \T1/lmr/m/n/12 No particular 
+prior distribution is
+ []
+
+[7
+
+]
+Overfull \hbox (3.5994pt too wide) in paragraph at lines 247--248
+[]\T1/lmr/m/n/12 With these two assumptions on $\OML/lmm/m/it/12 $\T1/lmr/m/n/
+12 , the matrix of transition probabilities
+ []
+
+[8] [9]
+<images/hmm_nstates_rho.png, id=233, 1445.4pt x 722.7pt>
+File: images/hmm_nstates_rho.png Graphic file (type png)
+<use images/hmm_nstates_rho.png>
+Package pdftex.def Info: images/hmm_nstates_rho.png  used on input line 287.
+(pdftex.def)             Requested size: 462.35728pt x 231.1805pt.
+
+Overfull \hbox (45.08252pt too wide) in paragraph at lines 286--289
+[]  [] 
+ []
+
+
+LaTeX Warning: Reference `fig:hmm_alpha_rho' on page 10 undefined on input line
+ 296.
+
+<images/hmm_alpha_rho.png, id=235, 1445.4pt x 722.7pt>
+File: images/hmm_alpha_rho.png Graphic file (type png)
+<use images/hmm_alpha_rho.png>
+Package pdftex.def Info: images/hmm_alpha_rho.png  used on input line 300.
+(pdftex.def)             Requested size: 462.35728pt x 231.1805pt.
+
+Overfull \hbox (45.08252pt too wide) in paragraph at lines 299--302
+[]  [] 
+ []
+
+[10 <./images/hmm_nstates_rho.png>] [11 <./images/hmm_alpha_rho.png>]
 Chapter 3.
-[8
+[12
 
 ]
 Chapter 4.
-[9
+
+Overfull \hbox (6.29878pt too wide) in paragraph at lines 316--316
+|\T1/lmss/bx/n/24.88 Model comparison and Discussion| 
+ []
+
+[13
 
 ]
 Chapter 5.
-[10
+[14
 
 ]
-Overfull \hbox (12.38437pt too wide) in paragraph at lines 240--240
+Overfull \hbox (12.38437pt too wide) in paragraph at lines 333--333
 \T1/lmr/m/n/12 beyond linear cryptanalysis?, \T1/lmr/m/it/12 Advances in Crypt
 ology - ASIACRYPT
  []
 
 
-Overfull \hbox (0.27094pt too wide) in paragraph at lines 240--240
+Overfull \hbox (0.27094pt too wide) in paragraph at lines 333--333
 \T1/lmr/m/it/12 of Cryptology and Information Security\T1/lmr/m/n/12 , Lecture 
 Notes in Computer
  []
 
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 240.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 333.
 
 
 ("/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/tex/late
 x/lm/t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Underfull \hbox (badness 1430) in paragraph at lines 240--240
+Underfull \hbox (badness 1430) in paragraph at lines 333--333
 \T1/lmr/m/n/12 for two-parameter decreasing hazard rate distributions using
  []
 
 
-Overfull \hbox (10.20264pt too wide) in paragraph at lines 240--240
+Overfull \hbox (10.20264pt too wide) in paragraph at lines 333--333
 []\T1/lmr/m/n/12 W. Weibull,   A statistical distribution function of wide app
 licability,
  []
 
 
-Overfull \hbox (9.21848pt too wide) in paragraph at lines 240--240
+Overfull \hbox (9.21848pt too wide) in paragraph at lines 333--333
 []\T1/lmr/m/n/12 T. L. Anderson, \T1/lmr/m/it/12 Fracture Mechanics: Fundamenta
 ls and Applications,
  []
 
 
-Overfull \hbox (2.90343pt too wide) in paragraph at lines 240--240
+Overfull \hbox (2.90343pt too wide) in paragraph at lines 333--333
 []\T1/lmr/m/n/12 Z. Harchaoui and C. Lévy-Leduc,   Multiple change-point estim
 ation
  []
 
-[11
+[15
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 242.
- [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 242.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 335.
+ [16]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 335.
  (kth_master_thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 242.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 242.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 335.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 335.
+Package rerunfilecheck Info: File `kth_master_thesis.out' has not changed.
+(rerunfilecheck)             Checksum: 791C96E10293C921E5C3BCDEE3EE41E8;1464.
 
 
-Package rerunfilecheck Warning: File `kth_master_thesis.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: Checksums for `kth_master_thesis.out':
-(rerunfilecheck)             Before: 894ECD4EDBBC1DB39B06630D67F5840C;1447
-(rerunfilecheck)             After:  22ABFE226411CCC8FEC7627DD2F7C944;1447.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package logreq Info: Writing requests to 'kth_master_thesis.run.xml'.
 \openout1 = `kth_master_thesis.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 242.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 335.
  ) 
 Here is how much of TeX's memory you used:
- 17062 strings out of 495223
- 285382 string characters out of 3179896
- 573088 words of memory out of 3000000
- 20034 multiletter control sequences out of 15000+200000
- 58943 words of font info for 48 fonts, out of 3000000 for 9000
+ 17094 strings out of 495223
+ 286078 string characters out of 3179896
+ 574095 words of memory out of 3000000
+ 20047 multiletter control sequences out of 15000+200000
+ 64923 words of font info for 50 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
- 43i,11n,45p,972b,2030s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{chapter*.3} has been referenced but does not exis
-t, replaced by a fixed one
-
-{/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/enc
-/dvips/lm/lm-ec.enc}{/Users/aguinaudeau/Library/Application Support/MiKTeX/texm
-fs/install/fonts/enc/dvips/lm/lm-rm.enc}{/Users/aguinaudeau/Library/Application
- Support/MiKTeX/texmfs/install/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/aguinau
-deau/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/lm/lm-ma
-thit.enc}{/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/
-fonts/enc/dvips/lm/lm-ts1.enc}</Users/aguinaudeau/Library/Application Support/M
-iKTeX/texmfs/install/fonts/type1/public/lm/lmbx12.pfb></Users/aguinaudeau/Libra
-ry/Application Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmcsc10.pfb>
+ 43i,11n,45p,972b,2034s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/e
+nc/dvips/lm/lm-ec.enc}{/Users/aguinaudeau/Library/Application Support/MiKTeX/te
+xmfs/install/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/aguinaudeau/Library/Appli
+cation Support/MiKTeX/texmfs/install/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/a
+guinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/lm
+/lm-mathsy.enc}{/Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/in
+stall/fonts/enc/dvips/lm/lm-rm.enc}{/Users/aguinaudeau/Library/Application Supp
+ort/MiKTeX/texmfs/install/fonts/enc/dvips/lm/lm-ts1.enc}</Users/aguinaudeau/Lib
+rary/Application Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmbx12.pfb
+></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/ty
+pe1/public/lm/lmcsc10.pfb></Users/aguinaudeau/Library/Application Support/MiKTe
+X/texmfs/install/fonts/type1/public/lm/lmex10.pfb></Users/aguinaudeau/Library/A
+pplication Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmmi12.pfb></Use
+rs/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/pu
+blic/lm/lmmi6.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs
+/install/fonts/type1/public/lm/lmmi8.pfb></Users/aguinaudeau/Library/Applicatio
+n Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmr12.pfb></Users/aguinau
+deau/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lm
+r8.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fo
+nts/type1/public/lm/lmri12.pfb></Users/aguinaudeau/Library/Application Support/
+MiKTeX/texmfs/install/fonts/type1/public/lm/lmss10.pfb></Users/aguinaudeau/Libr
+ary/Application Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmss12.pfb>
 </Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/typ
-e1/public/lm/lmmi12.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/
-texmfs/install/fonts/type1/public/lm/lmr12.pfb></Users/aguinaudeau/Library/Appl
-ication Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmr8.pfb></Users/ag
-uinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/
-lm/lmri12.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/ins
-tall/fonts/type1/public/lm/lmss10.pfb></Users/aguinaudeau/Library/Application S
-upport/MiKTeX/texmfs/install/fonts/type1/public/lm/lmss12.pfb></Users/aguinaude
-au/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmss
-bx10.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/
-fonts/type1/public/lm/lmsy10.pfb></Users/aguinaudeau/Library/Application Suppor
-t/MiKTeX/texmfs/install/fonts/type1/public/lm/lmtt12.pfb></Users/aguinaudeau/Li
-brary/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/sym
-bols/msbm10.pfb>
-Output written on kth_master_thesis.pdf (18 pages, 284480 bytes).
+e1/public/lm/lmssbx10.pfb></Users/aguinaudeau/Library/Application Support/MiKTe
+X/texmfs/install/fonts/type1/public/lm/lmsy10.pfb></Users/aguinaudeau/Library/A
+pplication Support/MiKTeX/texmfs/install/fonts/type1/public/lm/lmsy8.pfb></User
+s/aguinaudeau/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/pub
+lic/lm/lmtt12.pfb></Users/aguinaudeau/Library/Application Support/MiKTeX/texmfs
+/install/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on kth_master_thesis.pdf (22 pages, 528986 bytes).
 PDF statistics:
- 316 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 500000)
- 185 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 363 PDF objects out of 1000 (max. 8388607)
+ 73 named destinations out of 1000 (max. 500000)
+ 179 words of extra memory for PDF output out of 10000 (max. 10000000)
 

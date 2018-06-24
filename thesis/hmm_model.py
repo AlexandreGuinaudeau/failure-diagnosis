@@ -5,7 +5,7 @@ from thesis import BaseModel, BaseGenerator
 
 
 class BinaryHMM(_BaseHMM):
-    def __init__(self, states=11, change_state_ratio=0.01, random_state=None, **kwargs):
+    def __init__(self, states=101, change_state_ratio=0.01, random_state=None, **kwargs):
         if isinstance(states, int):
             states = [i / float(states - 1) for i in range(0, states)]
         states = np.array(states)
@@ -20,22 +20,8 @@ class BinaryHMM(_BaseHMM):
         proba_change_state -= np.diag(np.diag(proba_change_state))
 
         startprob_prior = np.array([1 / float(n_states)] * n_states)
-        # if transition_weights is None:
-        #     transitions = np.ones((n_states, n_states))
-        # else:
-        #     if len(transition_weights) == n_states - 1:
-        #         transition_weights = [0] + list(transition_weights)
-        #     transition_weights = np.array(transition_weights)
-        #     assert len(transition_weights) == n_states, \
-        #         "Expected %i weights, got %i" % (n_states, len(transition_weights))
-        #     transitions = sum([np.diag([transition_weights[k]]*(n_states-k), k) for k in range(n_states)])
-        #     transitions = transitions + transitions.transpose()
-        # # Normalize
-        # transitions -= np.diag(np.diag(transitions))  # Remove diagonal
-        # transitions /= transitions.sum(axis=1)
 
         transmat_prior = proba_same_state + proba_change_state
-        # transmat_prior = transmat_prior.transpose()
         super(BinaryHMM, self).__init__(n_components=n_states,
                                         startprob_prior=startprob_prior,
                                         transmat_prior=transmat_prior,
@@ -83,13 +69,16 @@ class HMMModel(BaseModel):
         if change_state_ratio != self._change_state_ratio:
             if kwargs is None:
                 kwargs = self.kwargs
+            if "change_state_ratio" in kwargs.keys():
+                change_state_ratio = kwargs["change_state_ratio"]
+                kwargs.pop("change_state_ratio")
             self._hmm = BinaryHMM(change_state_ratio=change_state_ratio, **kwargs)
         return self._hmm
 
     @classmethod
     def change_state_ratio_theory(cls, p, a, t):
         # ratio * sqrt(t) = 0.00 + 0.93a + 2.61a|0.5-p| +/- 0.30
-        return (0.93 * a + 2.61 * a * abs(0.5 - p)) / np.sqrt(t)
+        return (0.93 + 2.61 * abs(0.5 - p)) * a / np.sqrt(t)
 
     def run(self, x, return_full_prediction=True, kwargs=None):
         x = np.array(x)

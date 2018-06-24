@@ -48,16 +48,17 @@ class BaseModel(object):
 
         return pairwise.PAIRED_DISTANCES[kind](z, y)
 
-    def plot_prediction(self, x, generator=None, show=True, save_fig_path=None, color=None, plot_x=True, label=None):
+    def plot_prediction(self, x, generator=None, show=True, save_fig_path=None, color=None, plot_x=True, label=None,
+                        **plot_kwargs):
         if color is None:
             color = 'g'
         if label is None:
             label = "predicted"
-        y = self(x)
+        y = self.run(x)
         ind = np.arange(len(x))
         if plot_x:
-            plt.plot(ind, x, 'b+', label="events")
-        plt.plot(ind, y, color, label=label)
+            plt.plot(ind, x, 'b+', label="events", **plot_kwargs)
+        plt.plot(ind, y, color, label=label, **plot_kwargs)
 
         if generator is not None:
             assert isinstance(generator, BaseGenerator)
@@ -66,7 +67,7 @@ class BaseModel(object):
                                                [np.mean(x[change_points[i]:change_points[i+1]])
                                                 for i in range(len(change_points) - 1)])
             if plot_x:
-                plt.plot(ind, z, 'r', label="true")
+                plt.plot(ind, z, 'r', label="true", **plot_kwargs)
 
         plt.ylim(-0.1, 1.1)
         if label is not None:

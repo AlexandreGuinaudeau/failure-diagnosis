@@ -1,26 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from thesis import BaseGenerator, BinarySegmentationModel, HMMModel, BinaryHMM
+from thesis import BaseGenerator, BinarySegmentationModel, HMMModel, BinaryHMM, get_all_colors
 
 if __name__ != "__main__":
     raise NotImplementedError
 
 bg = BaseGenerator([0.3, 0.01, 0.5], [50, 100, 40])
 x = bg.generate(500)
-print x
 
-# bsm = BinarySegmentationModel(0.05)
-# hmm = HMMModel(BinaryHMM(11))
-# hmm.plot_prediction(x, bg, show=False)
-colors = ['y', 'c', 'k']
-thresholds = [0.1, 0.01, 0.001]
+thresholds = [0.1, 0.01, 0.001, 0.0001]
+colors = get_all_colors(len(thresholds))
 for i in range(len(thresholds)):
+    hmm = HMMModel(thresholds[i])
+    hmm.plot_prediction(x, bg, show=False, plot_x=False, color=colors[i],
+                        label="[HMM] Proba %s - score=%s" % (str(thresholds[i]), hmm.score(x, bg)), linestyle="dashed")
     bsm = BinarySegmentationModel(thresholds[i])
-    bsm.plot_prediction(x, bg, show=False, plot_x=False, color=colors[i],
-                        label="Proba %s - score=%s" % (str(0.0001), bsm.score(x, bg)))
+    bsm.plot_prediction(x, bg, show=i == len(thresholds)-1, plot_x=i == len(thresholds)-1, color=colors[i],
+                        label="[BSM] Proba %s - score=%s" % (str(thresholds[i]), bsm.score(x, bg)))
 
-bsm = BinarySegmentationModel(0.0001)
-bsm.plot_prediction(x, bg, label="Proba %s - score=%s" % (str(0.0001), bsm.score(x, bg)))
 
 # z = bsm.change_points_to_sequence([0] + list(np.cumsum(bg.durations[:-1])) + [len(x)], bg.probabilities)
 # y = bsm.segmentation(x)
